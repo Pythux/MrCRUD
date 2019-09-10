@@ -1,7 +1,7 @@
 {% extends "myapp/base.html" %}
 {% block body_block %}
 <body>
-    <div class="container-fluid text-white bg-info">
+    <div  id="crud-header" class="container-fluid text-white bg-info">
         <div class="d-flex justify-content-center text-center">
             <h1 class=" display-1">Creative's Mind</h1>
 
@@ -24,14 +24,14 @@
                 <div class="row">
                     {% for post in posts %}
                     <div class="col-md-4 p-3">
-                        <div class="card p-4 shadow-lg animated jello" style="height: 400px">
+                        <div class="card p-4 shadow-lg animated jello" style="height: 400px;">
                             <div class="card-body">
                                 <h2>{{ post.title|title }}</h2>
                                 <hr>
                                 <p>{{ post.content|slice:":150" }}...</p>
                             </div>
-                            <button type="button" name="button" class="btn btn-outline-info">
-                                More info
+                            <button class="btn btn-outline-info" style="height: 60px;width:60px;">
+                                GO
                             </button>
                         </div>
                     </div>
