@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>DjangoTemplate1</title>
+    </head>
+    <body>
+        <h1>Hi and welcome</h1>
+        <div>
+            {% if posts %}
+            <table>
+                <thead>
+                    <th>Title</th>
+                    <th>Content</th>
+                </thead>
+                {% for post in posts %}
+                <tr>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.content }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+            <p>No posts found!</p>
+            {% endif %}
+        </div>
+    </body>
+</html>
