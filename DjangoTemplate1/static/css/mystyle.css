@@ -9,3 +9,11 @@ ul li:hover {
     background-color: #17a2b8;
     color: white;
 }
+
+.card:hover {
+    border: 1px solid #17a2b8 !important;
+}
+
+.card:hover h2 {
+    color: #17a2b8 !important;
+}
