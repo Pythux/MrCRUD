@@ -10,7 +10,7 @@ def index(request):
     return render(request, 'myapp/index.html', context={'posts': posts})
 
 
-def form_name_view(request):
+def post_add(request):
     if request.method == 'POST':
         print(request.POST)
         form = forms.FormName(request.POST)

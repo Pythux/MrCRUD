@@ -17,7 +17,9 @@ from django.urls import path, re_path
 from myapp import views
 
 
+app_name = 'myapp'
+
 urlpatterns = [
     path('', views.index, name='index'),
-    path('form', views.form_name_view, name='form_name'),
+    path('add', views.post_add, name='post_add'),
 ]
