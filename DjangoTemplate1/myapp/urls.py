@@ -22,4 +22,5 @@ app_name = 'myapp'
 urlpatterns = [
     path('', views.index, name='index'),
     path('add', views.post_add, name='post_add'),
+    path('detail/<int:post_id>', views.detail, name='detail'),
 ]

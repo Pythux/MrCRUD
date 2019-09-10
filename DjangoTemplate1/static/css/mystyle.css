@@ -40,12 +40,29 @@ ul li:hover {
     }
 }
 
-button {
+a {
     margin: 0 auto;
     transition-duration: 0.6s !important;
     transition-property: border-radius !important;
 }
 
-button:hover {
+a:hover {
     border-radius: 50% !important;
+}
+
+#submit {
+    opacity: 0;
+    animation-name: subanim !important;
+    animation-duration: 3s;
+    animation-delay: 2s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes subanim {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
