@@ -1,0 +1,7 @@
+{% for li_error in errors %}
+    {% for error in li_error %}
+        <div class="alert alert-danger p-0 col-md-5">
+            <span class="px-2">{{ error }}</span>
+        </div>
+    {% endfor %}
+{% endfor %}

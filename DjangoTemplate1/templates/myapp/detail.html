@@ -5,12 +5,18 @@
         <div class="card-body">
             <h2>{{ post.title|title }}</h2>
             <hr>
-            <p>{{ post.content|safe|slice:":150" }}...</p>
+            <p>{{ post.content|slice:":150" }}...</p>
         </div>
-        <a class="btn btn-outline-info d-flex justify-content-center" style="height: 100px;width:100px;"
-            href="{% url 'myapp:create_update' %}?id={{ post.id }}">
-            <span class="align-self-center">Update</span>
-        </a>
+        <div class="d-flex">
+            <a class="btn btn-outline-info d-flex justify-content-center" style="height: 100px;width:100px;"
+                href="{% url 'myapp:create_update' %}?id={{ post.id }}">
+                <span class="align-self-center">Update</span>
+            </a>
+            <a class="btn btn-outline-danger d-flex justify-content-center" style="height: 100px;width:100px;"
+                href="{% url 'myapp:delete' post_id=post.id %}">
+                <span class="align-self-center">Delete</span>
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %}

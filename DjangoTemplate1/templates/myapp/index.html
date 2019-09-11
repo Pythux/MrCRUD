@@ -8,11 +8,11 @@
                 <div class="card-body">
                     <h2>{{ post.title|title }}</h2>
                     <hr>
-                    <p>{{ post.content|safe|slice:":150" }}...</p>
+                    <p>{{ post.content|slice:":150" }}...</p>
                 </div>
-                <a class="btn btn-outline-info" style="height: 60px;width:60px;"
+                <a class="btn btn-outline-info d-flex justify-content-center" style="height: 60px;width:60px;"
                     href="{% url 'myapp:detail' post_id=post.id %}">
-                    GO
+                    <span class="align-self-center">GO</span>
                 </a>
             </div>
         </div>

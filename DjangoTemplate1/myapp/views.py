@@ -1,5 +1,6 @@
-from django.shortcuts import render
-# from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
+from django.http import Http404, HttpResponseRedirect
+from django.urls import reverse
 
 from .models import Post
 from . import forms
@@ -12,7 +13,15 @@ def index(request):
 
 def detail(request, post_id):
     post = Post.objects.filter(id=post_id).first()
+    if post is None:
+        raise Http404('personalised error message')
     return render(request, 'myapp/detail.html', {'post': post})
+
+
+def delete(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    post.delete()
+    return HttpResponseRedirect(reverse('myapp:index'))
 
 
 def create_update(request):
@@ -22,8 +31,9 @@ def create_update(request):
         try:
             post_id = int(post_id)
         except ValueError:
-            return index(request)
-        post = Post.objects.filter(id=post_id).first()
+            raise Http404('the ID is not event an integer')
+        post = get_object_or_404(Post, pk=post_id)
+        # post = Post.objects.filter(id=post_id).first()
     if request.method == 'POST':
         form = forms.FormPost(request.POST)
         if post:
@@ -31,16 +41,16 @@ def create_update(request):
         form.full_clean()
         if form.is_valid():
             form.save(commit=True)
-            return index(request)
+            return HttpResponseRedirect(reverse('myapp:index'))
         else:
-            # print(form.errors.as_data())
+            print(form.errors.as_data())
             return render(request, 'myapp/create_update.html',
-                          {'form': form, 'post': post})
+                          {'form': form})
     if request.method == 'GET':
         form = forms.FormPost()
         if post:
             form = forms.FormPost(instance=post)
 
         return render(request, 'myapp/create_update.html',
-                      {'form': form, 'post': post})
+                      {'form': form})
     print('error, this request.method not handle: {}'.format(request.method))
