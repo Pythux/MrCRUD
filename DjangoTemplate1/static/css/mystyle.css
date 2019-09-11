@@ -5,7 +5,7 @@ h1, h2, h3 {
     font-family: 'Lobster', cursive;
 }
 
-ul li:hover {
+.menu:hover {
     background-color: #17a2b8;
     color: white;
 }
