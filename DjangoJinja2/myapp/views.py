@@ -4,7 +4,7 @@ from . import models
 
 
 class IndexView(TemplateView):
-    template_name = 'hello.jinja'
+    template_name = 'myapp/index.jinja'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -14,8 +14,12 @@ class IndexView(TemplateView):
 
 class PostListView(ListView):
     model = models.Post
+    # context_object_name =  # default to <model_name>_list
+    # template_name =  # default to '<app_name>/<model_name>_list.html'
+    template_name = "myapp/post_list.jinja"
 
 
 class PostDetailView(DetailView):
     model = models.Post
-    template_name = 'post_detail.jinja'
+    # context_object_name =  # default to <model_name>
+    template_name = 'myapp/post_detail.jinja'

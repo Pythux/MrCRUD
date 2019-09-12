@@ -7,7 +7,6 @@
         <link rel="stylesheet" href="{{ static("css/mystyle.css") }}">
     </head>
     <body>
-        {{ inject }}
         <div id="crud-header" class="container-fluid text-white bg-info">
             <div class="d-flex justify-content-center text-center">
                 <h1 class="display-1" style="cursor: pointer;" onclick="window.location.href='{{ url('myapp:index') }}'">
@@ -16,6 +15,11 @@
                     <footer class="blockquote-footer" style="color: #efefef">Mr. CRUD</footer>
                 </div>
             </div>
+        </div>
+        <div>
+            {% block content %}
+            <p>dafuck ?</p>
+            {% endblock %}
         </div>
     </body>
 </html>
