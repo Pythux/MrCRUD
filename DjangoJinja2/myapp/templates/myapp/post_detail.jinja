@@ -1,0 +1,23 @@
+{% extends "myapp/base.jinja" %}
+
+{% block content %}
+<div class="col-md-10 offset-md-1">
+    <div class="card p-4 shadow-lg animated jello" style="height: 400px;">
+        <div class="card-body">
+            <h2>{{ post.title|title|e }}</h2>
+            <hr>
+            <p>{{ post.content|e }}...</p>
+        </div>
+        <div class="d-flex">
+            <a class="btn btn-outline-info d-flex justify-content-center" style="height: 100px;width:100px;"
+                href="{{ url("myapp:post_update", pk=post.pk) }}">
+                <span class="align-self-center">Update</span>
+            </a>
+            <a class="btn btn-outline-danger d-flex justify-content-center" style="height: 100px;width:100px;"
+                href="{{ url("myapp:post_delete", pk=post.pk) }}">
+                <span class="align-self-center">Delete</span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

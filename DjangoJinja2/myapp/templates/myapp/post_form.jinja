@@ -1,0 +1,21 @@
+{% extends "myapp/base.jinja" %}
+
+{% block content %}
+<div class="mt-5 row justify-content-md-center">
+    <div class="card shadow-lg animated jello" style="width: 430px">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_ul() }}
+
+                {% if not form.instance.pk %}
+                    {% set submit_val = 'Create' %}
+                {% else %}
+                    {% set submit_val = 'Update' %}
+                {% endif %}
+                <input id="submit" type="submit" value="{{ submit_val }}" class="btn btn-success">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

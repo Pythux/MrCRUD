@@ -1,0 +1,22 @@
+{% extends "myapp/base.jinja" %}
+
+{% block content %}
+<div class="row justify-content-center pt-4">
+    {% for post in post_list %}
+    <div class="col-md-4">
+        <div class="card p-4 shadow-lg animated jello" style="height: 400px;">
+            <div class="card-body">
+                <h2>{{ post.title|title|e }}</h2>
+                <hr>
+                <p>{{ post.content|e }}...</p>
+            </div>
+            <a class="btn btn-outline-info d-flex justify-content-center" style="height: 60px;width:60px;"
+                href="{{ url('myapp:post_detail', pk=post.id) }}">
+                <span class="align-self-center">GO</span>
+            </a>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
+{% endblock %}
