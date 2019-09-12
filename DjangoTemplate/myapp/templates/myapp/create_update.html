@@ -1,0 +1,29 @@
+{% extends "myapp/base.html" %}
+{% block body_block %}
+<div class="col-md-10 offset-1">
+    <form method="post">
+        <div class="form-group">
+            {% include "myapp/error.html" with errors=form.non_field_errors.data %}
+            <div class="d-flex">
+                <label for="id_title" class="col-md-2">Title:</label>
+                {% include "myapp/error.html" with errors=form.title.errors.data %}
+            </div>
+
+            <input id="id_title" class="form-control" type="text" name="title"
+                value="{{ form.title.value|default:''|title }}">
+        </div>
+        <div class="form-group">
+            <div class="d-flex">
+                <label for="id_content" class="col-md-2">Content:</label>
+                {% include "myapp/error.html" with errors=form.content.errors.data %}
+            </div>
+
+            <textarea id="id_content" class="form-control" name="content" rows="8" cols="80"
+                >{{ form.content.value|default:'' }}</textarea>
+        </div>
+        {% csrf_token %}
+        {% if post %} <input type="text" hidden name="id" value="{{ post.id }}"> {% endif %}
+        <input id="submit" type="submit" value="Submit" class="btn btn-success">
+    </form>
+</div>
+{% endblock %}
