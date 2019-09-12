@@ -12,6 +12,10 @@ class IndexView(TemplateView):
         return context
 
 
+class LoginView(TemplateView):
+    template_name = 'myapp/login.jinja'
+
+
 class PostListView(ListView):
     model = models.Post
     # context_object_name =  # default to <model_name>_list
