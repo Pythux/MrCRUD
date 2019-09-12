@@ -53,6 +53,25 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'DjangoJinja2.urls'
 
+
+class color:
+    """enum to display colors"""
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+
+
+class InvalidString(str):
+    def __mod__(self, var_name):
+        print(color.FAIL + 'Undefined' +
+              color.WARNING + ' variable/attribut: "' +
+              color.FAIL + color.BOLD + str(var_name) +
+              color.WARNING + '"' +
+              color.ENDC)
+        return ''
+
+
 TEMPLATES = [  # order is important, first match Jinja, fallback on DTL
     {
         "BACKEND": "django_jinja.backend.Jinja2",
@@ -63,7 +82,7 @@ TEMPLATES = [  # order is important, first match Jinja, fallback on DTL
             # "match_regex": r"^(?!admin/).*",
             # this is additive to match_extension
             # if not using .jinja match extention but wanting the Django admin
-        }
+        },
     },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -76,6 +95,7 @@ TEMPLATES = [  # order is important, first match Jinja, fallback on DTL
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'string_if_invalid': InvalidString("%s"),
         },
     },
 ]
