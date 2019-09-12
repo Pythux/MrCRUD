@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_jinja',
+    'myapp',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +53,18 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'DjangoJinja2.urls'
 
-TEMPLATES = [
+TEMPLATES = [  # order is important, first match Jinja, fallback on DTL
+    {
+        "BACKEND": "django_jinja.backend.Jinja2",
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "match_extension": ".jinja",
+
+            # "match_regex": r"^(?!admin/).*",
+            # this is additive to match_extension
+            # if not using .jinja match extention but wanting the Django admin
+        }
+    },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],

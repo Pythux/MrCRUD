@@ -1,0 +1,26 @@
+
+@import url('https://fonts.googleapis.com/css?family=Lobster&display=swap%27');
+
+h1, h2, h3 {
+    font-family: 'Lobster', cursive;
+}
+
+#crud-header {
+    position: relative;
+    animation-name: popheader;
+    animation-duration: 1.5s;
+}
+
+@keyframes popheader {
+    0% {
+        background-color: #bff4fc;
+        left: -100%;
+    }
+    50% {
+        background-color: #bff4fc;
+    }
+    100% {
+        background-color: #17a2b8;
+        left: 0%;
+    }
+}
