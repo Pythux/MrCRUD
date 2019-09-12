@@ -1,7 +1,6 @@
 # from django.shortcuts import render
-from django.views.generic import TemplateView
-
-# Create your views here.
+from django.views.generic import TemplateView, ListView, DetailView
+from . import models
 
 
 class IndexView(TemplateView):
@@ -11,3 +10,12 @@ class IndexView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['inject'] = "yolo"
         return context
+
+
+class PostListView(ListView):
+    model = models.Post
+
+
+class PostDetailView(DetailView):
+    model = models.Post
+    template_name = 'post_detail.jinja'
