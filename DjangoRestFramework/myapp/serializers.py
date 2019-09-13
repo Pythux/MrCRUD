@@ -31,14 +31,24 @@ from django.contrib.auth.models import User
 #         raise serializers.ValidationError('userName :{}'.format(value))
 
 
+class MyValidation(object):
+    def __init__(self, base):
+        self.base = base
+
+    def __call__(self, value):
+        if value != self.base:
+            message = 'This field value: "{}" not equal to: "{}"'.format(value, self.base)
+            raise serializers.ValidationError(message)
+
+
 class UserSerializer(serializers.Serializer):
 
-    # def validate(self, data):
-    #     # data is an OrderedDict with default value for each field if not given
-    #     raise serializers.ValidationError('yoyo, name: {}'.format(data['username']))
-    #
-    # def validate_username(self, value):
-    #     raise serializers.ValidationError('userName :{}'.format(value))
+    def validate(self, data):
+        # data is an OrderedDict with default value for each field if not given
+        raise serializers.ValidationError('yoyo, name: {}'.format(data['username']))
+
+    def validate_username(self, value):
+        raise serializers.ValidationError('userName :{}'.format(value))
 
     url = serializers.HyperlinkedIdentityField(view_name='user-detail')
     username = serializers.CharField(
@@ -46,6 +56,7 @@ class UserSerializer(serializers.Serializer):
                   'digits and @/./+/-/_ only.',
         max_length=150, validators=[
             UnicodeUsernameValidator,
+            MyValidation(base="yo"),
             UniqueValidator(queryset=User.objects.all(),
                             # overwite error message
                             message="already exist :)")])
