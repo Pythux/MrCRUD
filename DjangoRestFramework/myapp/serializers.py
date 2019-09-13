@@ -37,18 +37,21 @@ class MyValidation(object):
 
     def __call__(self, value):
         if value != self.base:
-            message = 'This field value: "{}" not equal to: "{}"'.format(value, self.base)
+            message = "This field value: '{}' not equal to: '{}'".format(value, self.base)
             raise serializers.ValidationError(message)
 
 
 class UserSerializer(serializers.Serializer):
 
-    def validate(self, data):
-        # data is an OrderedDict with default value for each field if not given
-        raise serializers.ValidationError('yoyo, name: {}'.format(data['username']))
+    # def validate(self, data):
+    #     # data is an OrderedDict with default value for each field if not given
+    #     raise serializers.ValidationError('yoyo, name: {}'.format(data['username']))
+    #     return data  # like Django clean, return the cleaned value
 
     def validate_username(self, value):
-        raise serializers.ValidationError('userName :{}'.format(value))
+        # raise serializers.ValidationError('userName :{}'.format(value))
+        # warning, validate are run after validators on the fields
+        return value  # like Django clean_<field>, return the cleaned value
 
     url = serializers.HyperlinkedIdentityField(view_name='user-detail')
     username = serializers.CharField(
@@ -60,9 +63,10 @@ class UserSerializer(serializers.Serializer):
             UniqueValidator(queryset=User.objects.all(),
                             # overwite error message
                             message="already exist :)")])
-    # email = serializers.EmailField(
-    #     allow_blank=True, label='Email address',
-    #     max_length=254, required=False)
+    email = serializers.EmailField(
+        allow_blank=True, label='Email address',
+        max_length=254, required=False,
+        validators=[UniqueValidator(queryset=User.objects.all())])
 
     def create(self, validated_data):
         """Create & return a new `User` instance, given the validated data."""
