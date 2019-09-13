@@ -22,9 +22,24 @@ from django.contrib.auth.models import User
 #     class Meta:
 #         model = User
 #         fields = '__all__'
+#
+#     def validate(self, data):
+#         # data is an OrderedDict with default value for each field if not given
+#         raise serializers.ValidationError('yoyo, name: {}'.format(data['username']))
+#
+#     def validate_username(self, value):
+#         raise serializers.ValidationError('userName :{}'.format(value))
 
 
 class UserSerializer(serializers.Serializer):
+
+    # def validate(self, data):
+    #     # data is an OrderedDict with default value for each field if not given
+    #     raise serializers.ValidationError('yoyo, name: {}'.format(data['username']))
+    #
+    # def validate_username(self, value):
+    #     raise serializers.ValidationError('userName :{}'.format(value))
+
     url = serializers.HyperlinkedIdentityField(view_name='user-detail')
     username = serializers.CharField(
         help_text='Required. 150 characters or fewer. Letters, '
