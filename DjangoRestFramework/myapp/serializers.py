@@ -4,7 +4,8 @@ from rest_framework.validators import UniqueValidator
 from django.contrib.auth.models import User
 
 
-# # Serializers define the API representation.
+# # Serializers define the API representation. # #
+
 # class UserSerializer(serializers.HyperlinkedModelSerializer):
 #     class Meta:
 #         model = User
@@ -12,9 +13,15 @@ from django.contrib.auth.models import User
 #         fields = ['url', 'username', 'email', 'is_staff']
 #         # exclude = ('password',)
 
-#     # printable to get the fields:
-#     from myapp.serializers import UserSerializer
-#     print(UserSerializer())
+# # # printable to get the generated serializer: # # #
+# from myapp.serializers import UserSerializer
+# print(UserSerializer())
+
+
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = '__all__'
 
 
 class UserSerializer(serializers.Serializer):
