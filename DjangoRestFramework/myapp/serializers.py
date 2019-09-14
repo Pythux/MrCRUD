@@ -4,8 +4,54 @@ from django.utils import timezone
 # from rest_framework.validators import UniqueValidator
 import re
 
+from .models import NicePlace
+
 
 # # Serializers define the API representation. # #
+
+
+class CoordinateField(serializers.Field):
+    default_error_messages = {
+        'attr_null': 'attribute "x" must be given',
+    }
+
+    def to_representation(self, instance):
+        return {
+            'x': instance.coord_x,
+            'y': instance.coord_y,
+        }
+
+    def to_internal_value(self, data):
+        # to save in the model, it's is attributes
+        # executed on .is_valid, may raise ValidationError
+        if data.get('x', None) is None:
+            self.fail('attr_null')
+        return {
+            'coord_x': data['x'],
+            'coord_y': data['y'],
+        }
+
+
+class CoordinateSerializer(serializers.Serializer):
+    x = serializers.IntegerField(source='coord_x')
+    y = serializers.IntegerField(source='coord_y')
+
+
+class CoordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NicePlace
+        fields = ['place', 'coordinates']
+
+    coordinates = CoordinateField(source='*')
+
+
+class CoordSerializer2(serializers.ModelSerializer):
+    class Meta:
+        model = NicePlace
+        fields = ['place', 'coordinates']
+
+    coordinates = CoordinateSerializer(source='*')
+
 
 class Color(object):
     """
@@ -77,15 +123,51 @@ class CustomSerializer(serializers.Serializer):
         return timezone.now()
 
 
-"""in shell:
+"""in shell: (python manage.py shell)
 >>> from myapp import serializers as s
 
 def er(d):
-     c = s.CustomSerializer(data=d)
-     c.is_valid()
-     return c.errors
+    c = s.CustomSerializer(data=d)
+    c.is_valid()
+    return c.errors
 
 >>> er({'title': 'Titre', 'list_of_position': [{'x': 1, 'y': 1.234}],
         'dict': {'yo': 42, 'three': 123, 'da': '_'}, 'second_dict': {'x': 4, 'y': 2},
         'color': 'rgb(4,400,1)'})
+
+
+# from dict
+c = s.CoordSerializer(data={'place': 'here', 'coordinates': {'y': 4}})
+c.is_valid()
+c.errors
+c.validated_data
+
+# from model instance
+obj = s.NicePlace(place='place', coord_x=4, coord_y=2)
+c = s.CoordSerializer(obj)
+c.data
+c2.validated_data
+
+# no validation:
+coord = {'place': 'here', 'coordinates': {'y': 4, 'x': 2.5}}
+c = s.CoordSerializer(data=coord)
+c.is_valid() == True
+
+# validation:
+c2 = s.CoordSerializer2(data=coord)
+c2.is_valid() # == False
+c2.errors # validation of IntegerField
+
+coord = {'place': 'here', 'coordinates': {'y': 4, 'x': 2}}
+c2 = s.CoordSerializer2(data=coord)
+c2.is_valid()
+c2.data
+c2.validated_data
+
+# saving data
+coord = {'place': 'here', 'coordinates': {'y': 4, 'x': 2}}
+c2 = s.CoordSerializer2(data=coord)
+c2.is_valid()
+c2.validated_data
+c2.save()
 """
