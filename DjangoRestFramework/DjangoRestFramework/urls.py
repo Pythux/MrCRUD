@@ -28,6 +28,8 @@ router.register(r'users', views.UserViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('grappelli/', include('grappelli.urls')),
+    # grappelli URLS required for related–lookups and autocompletes
 
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls',  # auth for browsable API
