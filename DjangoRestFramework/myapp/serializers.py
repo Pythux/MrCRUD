@@ -1,80 +1,91 @@
 from rest_framework import serializers
-from django.contrib.auth.validators import UnicodeUsernameValidator
-from rest_framework.validators import UniqueValidator
-from django.contrib.auth.models import User
+# from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.utils import timezone
+# from rest_framework.validators import UniqueValidator
+import re
 
 
 # # Serializers define the API representation. # #
 
-# class UserSerializer(serializers.HyperlinkedModelSerializer):
-#     class Meta:
-#         model = User
-#         # fields = '__all__'
-#         fields = ['url', 'username', 'email', 'is_staff']
-#         # exclude = ('password',)
-
-# # # printable to get the generated serializer: # # #
-# from myapp.serializers import UserSerializer
-# print(UserSerializer())
+class Color(object):
+    """
+    A color represented in the RGB colorspace.
+    """
+    def __init__(self, red, green, blue):
+        assert(red >= 0 and green >= 0 and blue >= 0)
+        assert(red < 256 and green < 256 and blue < 256)
+        self.red, self.green, self.blue = red, green, blue
 
 
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = '__all__'
-#
-#     def validate(self, data):
-#         # data is an OrderedDict with default value for each field if not given
-#         raise serializers.ValidationError('yoyo, name: {}'.format(data['username']))
-#
-#     def validate_username(self, value):
-#         raise serializers.ValidationError('userName :{}'.format(value))
+class ColorField(serializers.Field):
+    """
+    Color objects are serialized into 'rgb(#, #, #)' notation.
+    """
+    def to_representation(self, value):
+        return "rgb(%d, %d, %d)" % (value.red, value.green, value.blue)
+
+    default_error_messages = {
+        'incorrect_type': 'Incorrect type. Expected a string, but got {input_type}',
+        'incorrect_format': 'Incorrect format. Expected `rgb(#,#,#)`.',
+        'out_of_range': 'Value out of range. Must be between 0 and 255.'
+    }
+
+    def to_internal_value(self, data):
+        if not isinstance(data, str):
+            # msg = 'Incorrect type. Expected a string, but got %s'
+            # raise serializers.ValidationError(msg % type(data).__name__)
+            self.fail('incorrect_type', input_type=type(data).__name__)
+
+        if not re.match(r'^rgb\([0-9]+,[0-9]+,[0-9]+\)$', data):
+            raise serializers.ValidationError('Incorrect format. Expected `rgb(#,#,#)`.')
+            self.fail('incorrect_format')
+
+        data = data.strip('rgb(').rstrip(')')
+        red, green, blue = [int(col) for col in data.split(',')]
+
+        if any([col > 255 or col < 0 for col in (red, green, blue)]):
+            # raise ValidationError('Value out of range. Must be between 0 and 255.')
+            self.fail('out_of_range')
+
+        return Color(red, green, blue)
 
 
-class MyValidation(object):
-    def __init__(self, base):
-        self.base = base
-
-    def __call__(self, value):
-        if value != self.base:
-            message = "This field value: '{}' not equal to: '{}'".format(value, self.base)
-            raise serializers.ValidationError(message)
+class ColorSerializer(serializers.Serializer):
+    color = ColorField()
 
 
-class UserSerializer(serializers.Serializer):
+class NestedSerializer(serializers.Serializer):
+    x = serializers.IntegerField()
+    y = serializers.DecimalField(3, 2)
 
-    # def validate(self, data):
-    #     # data is an OrderedDict with default value for each field if not given
-    #     raise serializers.ValidationError('yoyo, name: {}'.format(data['username']))
-    #     return data  # like Django clean, return the cleaned value
 
-    def validate_username(self, value):
-        # raise serializers.ValidationError('userName :{}'.format(value))
-        # warning, validate are run after validators on the fields
-        return value  # like Django clean_<field>, return the cleaned value
+class CustomSerializer(serializers.Serializer):
+    """Composite fields List and Dict"""
+    title = serializers.CharField()
+    list_of_position = serializers.ListField(
+        max_length=2, allow_empty=False,
+        child=NestedSerializer())
+    dict = serializers.DictField(
+        child=serializers.CharField(max_length=2))
 
-    url = serializers.HyperlinkedIdentityField(view_name='user-detail')
-    username = serializers.CharField(
-        help_text='Required. 150 characters or fewer. Letters, '
-                  'digits and @/./+/-/_ only.',
-        max_length=150, validators=[
-            UnicodeUsernameValidator,
-            MyValidation(base="yo"),
-            UniqueValidator(queryset=User.objects.all(),
-                            # overwite error message
-                            message="already exist :)")])
-    email = serializers.EmailField(
-        allow_blank=True, label='Email address',
-        max_length=254, required=False,
-        validators=[UniqueValidator(queryset=User.objects.all())])
+    second_dict = NestedSerializer()
+    color = ColorField()
 
-    def create(self, validated_data):
-        """Create & return a new `User` instance, given the validated data."""
-        return User.objects.create(**validated_data)
+    inserted_date = serializers.SerializerMethodField()
 
-    def update(self, instance, validated_data):
-        """Update & return an existing `User` instance, given the validated data."""
-        instance.username = validated_data.get('username', instance.username)
-        instance.email = validated_data.get('email', instance.email)
-        instance.save()
-        return instance
+    def get_inserted_date(self, obj):
+        return timezone.now()
+
+
+"""in shell:
+>>> from myapp import serializers as s
+
+def er(d):
+     c = s.CustomSerializer(data=d)
+     c.is_valid()
+     return c.errors
+
+>>> er({'title': 'Titre', 'list_of_position': [{'x': 1, 'y': 1.234}],
+        'dict': {'yo': 42, 'three': 123, 'da': '_'}, 'second_dict': {'x': 4, 'y': 2},
+        'color': 'rgb(4,400,1)'})
+"""
