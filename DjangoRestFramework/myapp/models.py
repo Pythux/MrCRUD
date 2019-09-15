@@ -9,4 +9,4 @@ class NicePlace(models.Model):
     coord_y = models.IntegerField()
 
     def __str__(self):
-        return self.place
+        return "{}: {} - {}".format(self.place, self.coord_x, self.coord_y)
