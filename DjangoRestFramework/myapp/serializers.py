@@ -16,7 +16,9 @@ class CustomSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         np = NicePlaceSerializer(data=validated_data['place'])
-        np.is_valid()
+        # np.is_valid()
+        np._validated_data = validated_data['place']
+        np._errors = {}
         np.save()
         return 'good!'
 
