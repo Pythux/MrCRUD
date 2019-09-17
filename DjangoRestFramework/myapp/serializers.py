@@ -18,11 +18,21 @@ class CountrySerializer(serializers.ModelSerializer):
         # fields = '__all__'
         exclude = 'niceplace',
 
+    # def create(self, validated_data):
+    #     nested_data = validated_data.pop('place')
+    #     place = self.fields['place'].create(nested_data)
+    #     validated_data['niceplace'] = place
+    #     return super(CountrySerializer, self).create(validated_data)
+
     def create(self, validated_data):
         nested_data = validated_data.pop('place')
-        place = self.fields['place'].create(nested_data)
-        validated_data['niceplace'] = place
-        return super(CountrySerializer, self).create(validated_data)
+        # np = NicePlace(**nested_data)
+        # np.save()
+        # country = Country(niceplace=np, **validated_data)
+        # country.save()
+        np = NicePlace.objects.create(**nested_data)
+        country = Country.objects.create(niceplace=np, **validated_data)
+        return country
 
     def update(self, instance, validated_data):
         nested_serializer = self.fields['place']
