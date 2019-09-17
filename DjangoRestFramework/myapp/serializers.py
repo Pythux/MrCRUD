@@ -6,17 +6,18 @@ from .models import Country, NicePlace
 class NicePlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = NicePlace
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = 'country',
 
 
 class CountrySerializer(serializers.ModelSerializer):
     """Composite fields List and Dict"""
-    place = NicePlaceSerializer()
+    places = NicePlaceSerializer(many=True)
 
     class Meta:
         model = Country
-        # fields = '__all__'
-        exclude = 'niceplace',
+        fields = '__all__'
+        # exclude = 'niceplace_set',
 
     # def create(self, validated_data):
     #     nested_data = validated_data.pop('place')
@@ -25,34 +26,35 @@ class CountrySerializer(serializers.ModelSerializer):
     #     return super(CountrySerializer, self).create(validated_data)
 
     def create(self, validated_data):
-        nested_data = validated_data.pop('place')
-        # np = NicePlace(**nested_data)
-        # np.save()
-        # country = Country(niceplace=np, **validated_data)
-        # country.save()
-        np = NicePlace.objects.create(**nested_data)
-        country = Country.objects.create(niceplace=np, **validated_data)
+        nested_data = validated_data.pop('places')
+
+        country = Country.objects.create(**validated_data)
+        for place in nested_data:
+            NicePlace(country=country, **place).save()
         return country
 
     def update(self, instance, validated_data):
-        nested_serializer = self.fields['place']
-        nested_instance = instance.niceplace
-        nested_data = validated_data.pop('place')
-        nested_serializer.update(nested_instance, nested_data)
-        # field "place" in not in validated_data, it have been `pop`ed
+        nested_serializer = self.fields['places']
+        instance.niceplace_set.all().delete()
+        for place in validated_data.pop('places'):
+            place['country'] = instance
+            nested_serializer.create([place])
+        # field "places" in not in validated_data, it have been `pop`ed
         return super(CountrySerializer, self).update(instance, validated_data)
 
 
 """in shell: (python manage.py shell)
 
 from myapp import serializers as s
-c = s.CountrySerializer(data={'name': 'Chill', 'place': {'name': 'here', 'coord_x': 1, 'coord_y': 2}})
+c = s.CountrySerializer(data={'name': 'Chill', 'places': []})
 c.is_valid()
 # c.data
 c.validated_data
 c.save()
 
-data = {'name': 'Chill', 'place': {'name': 'renamed', 'coord_x': 1, 'coord_y': 2}}
+from myapp import serializers as s
+data = {'name': 'Chill', 'places': [{'name': 'here', 'coord_x': 1, 'coord_y': 3}]}
+data = {'name': 'Chill', 'places': [{'name': 'renamed', 'coord_x': 1, 'coord_y': 2}]}
 instance = s.Country.objects.all().first()
 c = s.CountrySerializer(instance, data=data)
 c.is_valid()
