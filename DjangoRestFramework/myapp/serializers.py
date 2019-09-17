@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import NicePlace
+from .models import Country, NicePlace
 
 
 class NicePlaceSerializer(serializers.ModelSerializer):
@@ -9,34 +9,46 @@ class NicePlaceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CustomSerializer(serializers.Serializer):
+class CountrySerializer(serializers.ModelSerializer):
     """Composite fields List and Dict"""
-    title = serializers.CharField()
     place = NicePlaceSerializer()
 
+    class Meta:
+        model = Country
+        # fields = '__all__'
+        exclude = 'niceplace',
+
     def create(self, validated_data):
-        np = NicePlaceSerializer(data=validated_data['place'])
-        # np.is_valid()
-        np._validated_data = validated_data['place']
-        np._errors = {}
-        np.save()
-        return 'good!'
+        nested_data = validated_data.pop('place')
+        place = self.fields['place'].create(nested_data)
+        validated_data['niceplace'] = place
+        return super(CountrySerializer, self).create(validated_data)
+
+    def update(self, instance, validated_data):
+        nested_serializer = self.fields['place']
+        nested_instance = instance.niceplace
+        nested_data = validated_data.pop('place')
+        nested_serializer.update(nested_instance, nested_data)
+        # field "place" in not in validated_data, it have been `pop`ed
+        return super(CountrySerializer, self).update(instance, validated_data)
 
 
 """in shell: (python manage.py shell)
 
 from myapp import serializers as s
-c = s.NicePlaceSerializer(data={'place': 'here', 'coord_x': 1, 'coord_y': 2})
+c = s.CountrySerializer(data={'name': 'Chill', 'place': {'name': 'here', 'coord_x': 1, 'coord_y': 2}})
 c.is_valid()
 # c.data
 c.validated_data
 c.save()
 
-from myapp import serializers as s
-c = s.CustomSerializer(data={'title': 'yo', 'place': {'place': 'here', 'coord_x': 1, 'coord_y': 2}})
+data = {'name': 'Chill', 'place': {'name': 'renamed', 'coord_x': 1, 'coord_y': 2}}
+instance = s.Country.objects.all().first()
+c = s.CountrySerializer(instance, data=data)
 c.is_valid()
-# c.data
 c.validated_data
-c.save()
-nps = s.NicePlace.objects.all()
+c.save()  # update
+
+nps = s.Country.objects.all()
+nps.delete()
 """
