@@ -12,7 +12,7 @@ class NicePlaceSerializer(serializers.ModelSerializer):
 
 class CountrySerializer(serializers.ModelSerializer):
     """Composite fields List and Dict"""
-    places = NicePlaceSerializer(many=True)
+    places = NicePlaceSerializer(many=True, source='niceplace_set')
 
     class Meta:
         model = Country
@@ -26,8 +26,8 @@ class CountrySerializer(serializers.ModelSerializer):
     #     return super(CountrySerializer, self).create(validated_data)
 
     def create(self, validated_data):
-        nested_data = validated_data.pop('places')
-
+        # validated_data use the source naming
+        nested_data = validated_data.pop('niceplace_set')
         country = Country.objects.create(**validated_data)
         for place in nested_data:
             NicePlace(country=country, **place).save()
@@ -36,7 +36,7 @@ class CountrySerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         nested_serializer = self.fields['places']
         instance.niceplace_set.all().delete()
-        for place in validated_data.pop('places'):
+        for place in validated_data.pop('niceplace_set'):
             place['country'] = instance
             nested_serializer.create([place])
         # field "places" in not in validated_data, it have been `pop`ed
