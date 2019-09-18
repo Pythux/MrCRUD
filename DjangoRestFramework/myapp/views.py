@@ -1,7 +1,5 @@
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework import status, viewsets
-from rest_framework.decorators import api_view
+from rest_framework import status, permissions
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 
@@ -9,44 +7,44 @@ from . import models
 from .serializers import CountrySerializer
 
 
-@csrf_exempt
+@api_view(['GET', 'POST'])
+@permission_classes((permissions.AllowAny,))
 def country_list(request):
     if request.method == 'GET':
         country = models.Country.objects.all()
         serializer = CountrySerializer(country, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        # return JsonResponse(serializer.data, safe=False)
+        return Response(serializer.data)
 
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = CountrySerializer(data=data)
+        serializer = CountrySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@csrf_exempt
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes((permissions.AllowAny,))
 def country_detail(request, pk):
-    """
-    Retrieve, update or delete a code snippet.
-    """
+    """Retrieve, update or delete a Country."""
     try:
         country = models.Country.objects.get(pk=pk)
     except models.Country.DoesNotExist:
-        return HttpResponse(status=404)
+        return Response(status=404)
 
     if request.method == 'GET':
         serializer = CountrySerializer(country)
-        return JsonResponse(serializer.data)
+        return Response(serializer.data)
 
     elif request.method == 'PUT':
         data = JSONParser().parse(request)
         serializer = CountrySerializer(country, data=data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
 
     elif request.method == 'DELETE':
         country.delete()
-        return HttpResponse(status=204)
+        return Response(status=204)
