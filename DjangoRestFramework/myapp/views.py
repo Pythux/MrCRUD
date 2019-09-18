@@ -9,7 +9,7 @@ from .serializers import CountrySerializer
 
 @api_view(['GET', 'POST'])
 @permission_classes((permissions.AllowAny,))
-def country_list(request):
+def country_list(request, format=None):
     if request.method == 'GET':
         country = models.Country.objects.all()
         serializer = CountrySerializer(country, many=True)
@@ -26,7 +26,7 @@ def country_list(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes((permissions.AllowAny,))
-def country_detail(request, pk):
+def country_detail(request, pk, format=None):
     """Retrieve, update or delete a Country."""
     try:
         country = models.Country.objects.get(pk=pk)
