@@ -16,8 +16,8 @@ app_name = 'myapp'
 # Wire up our API using automatic URL routing.
 urlpatterns = [
     # path('', include(router.urls)),
-    path('country', views.country_list),
-    path('country/<int:pk>', views.country_detail),
+    path('country', views.CountryList.as_view()),
+    path('country/<int:pk>', views.CountryDetail.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
