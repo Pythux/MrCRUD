@@ -17,7 +17,9 @@ app_name = 'myapp'
 urlpatterns = [
     # path('', include(router.urls)),
     path('country', views.CountryList.as_view()),
-    path('country/<int:pk>', views.CountryDetail.as_view()),
+    path('country/<int:pk>', views.CountryDetail.as_view(), name='country-list'),
+    path('user', views.UserList.as_view()),
+    path('user/<int:pk>', views.UserDetail.as_view(), name='user-detail'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

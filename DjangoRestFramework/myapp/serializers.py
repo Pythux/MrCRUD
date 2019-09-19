@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from django.contrib.auth.models import User
 from .models import Country, NicePlace
 
 
@@ -13,6 +14,7 @@ class NicePlaceSerializer(serializers.ModelSerializer):
 class CountrySerializer(serializers.ModelSerializer):
     """Composite fields List and Dict"""
     places = NicePlaceSerializer(many=True, source='niceplace_set')
+    owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = Country
@@ -43,14 +45,25 @@ class CountrySerializer(serializers.ModelSerializer):
         return super(CountrySerializer, self).update(instance, validated_data)
 
 
+class UserSerializer(serializers.ModelSerializer):
+    # country_set = serializers.PrimaryKeyRelatedField(many=True, queryset=Country.objects.all())
+    # country_set = serializers.StringRelatedField(many=True)
+    # country_set = CountrySerializer(many=True, read_only=True, source='country_set')
+    url = serializers.HyperlinkedIdentityField(view_name='myapp:user-detail')
+    country_set = serializers.HyperlinkedRelatedField(
+        view_name='myapp:country-list',
+        many=True,
+        read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'url', 'country_set']
+
+
 """in shell: (python manage.py shell)
 
 from myapp import serializers as s
 c = s.CountrySerializer(data={'name': 'Chill', 'places': []})
-c.is_valid()
-# c.data
-c.validated_data
-c.save()
 
 from myapp import serializers as s
 data = {'name': 'Chill', 'places': [{'name': 'here', 'coord_x': 1, 'coord_y': 3}]}
@@ -61,6 +74,5 @@ c.is_valid()
 c.validated_data
 c.save()  # update
 
-nps = s.Country.objects.all()
-nps.delete()
+s.Country.objects.all().delete()
 """
