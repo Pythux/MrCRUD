@@ -1,43 +1,23 @@
 
 from django.urls import path, include
-from rest_framework import routers
-from rest_framework.urlpatterns import format_suffix_patterns
+# from rest_framework import routers
+from rest_framework.routers import DefaultRouter
+# from rest_framework.urlpatterns import format_suffix_patterns
 from . import views
 
 
 app_name = 'myapp'
 
 
-country_list = views.CountryViewSet.as_view({
-    'get': 'list',
-    'post': 'create'
-})
-country_detail = views.CountryViewSet.as_view({
-    'get': 'retrieve',
-    'put': 'update',
-    'patch': 'partial_update',
-    'delete': 'destroy'
-})
-country_places = views.CountryViewSet.as_view({
-        'get': 'places'
-})
+# Create a router and register our viewsets with it.
+router = DefaultRouter()
+router.register(r'country', views.CountryViewSet)
+router.register(r'user', views.UserViewSet)
 
-user_list = views.UserViewSet.as_view({
-    'get': 'list'
-})
-user_detail = views.UserViewSet.as_view({
-    'get': 'retrieve'
-})
-
-# Wire up our API using automatic URL routing.
+# The API URLs are now determined automatically by the router.
 urlpatterns = [
-    # path('', include(router.urls)),
-    path('', views.api_root),
-    path('country', country_list, name='country-list'),
-    path('country/<int:pk>', country_detail, name='country-detail'),
-    path('country/<int:pk>/places', country_places, name='country-detail-places'),
-    path('user', user_list, name='user-list'),
-    path('user/<int:pk>', user_detail, name='user-detail'),
+    path('', include(router.urls)),
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+# urlpatterns = format_suffix_patterns(urlpatterns)
+# can't do that now

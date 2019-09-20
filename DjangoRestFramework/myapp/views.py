@@ -38,7 +38,7 @@ class CountryViewSet(viewsets.ModelViewSet):
 
     @action(detail=True)
     def places(self, request, *args, **kwargs):
-        """provide an extra action "places"
+        """provide an extra action "places",
             actions are "list, create, retrieve, update, partial_update, ..."
         """
         country = self.get_object()
