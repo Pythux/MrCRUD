@@ -45,19 +45,23 @@ class CountrySerializer(serializers.ModelSerializer):
         return super(CountrySerializer, self).update(instance, validated_data)
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
     # country_set = serializers.PrimaryKeyRelatedField(many=True, queryset=Country.objects.all())
     # country_set = serializers.StringRelatedField(many=True)
     # country_set = CountrySerializer(many=True, read_only=True, source='country_set')
-    url = serializers.HyperlinkedIdentityField(view_name='myapp:user-detail')
-    country_set = serializers.HyperlinkedRelatedField(
-        view_name='myapp:country-detail',
-        many=True,
-        read_only=True)
+    # url = serializers.HyperlinkedIdentityField(view_name='myapp:user-detail')
+    # country_set = serializers.HyperlinkedRelatedField(
+    #     view_name='myapp:country-detail',
+    #     many=True,
+    #     read_only=True)
 
     class Meta:
         model = User
         fields = ['id', 'username', 'url', 'country_set']
+        extra_kwargs = {
+            'url': {'view_name': 'myapp:user-detail'},
+            'country_set': {'view_name': 'myapp:country-detail'}
+        }
 
 
 """in shell: (python manage.py shell)
