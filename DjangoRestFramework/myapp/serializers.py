@@ -51,7 +51,7 @@ class UserSerializer(serializers.ModelSerializer):
     # country_set = CountrySerializer(many=True, read_only=True, source='country_set')
     url = serializers.HyperlinkedIdentityField(view_name='myapp:user-detail')
     country_set = serializers.HyperlinkedRelatedField(
-        view_name='myapp:country-list',
+        view_name='myapp:country-detail',
         many=True,
         read_only=True)
 

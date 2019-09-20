@@ -16,9 +16,10 @@ app_name = 'myapp'
 # Wire up our API using automatic URL routing.
 urlpatterns = [
     # path('', include(router.urls)),
-    path('country', views.CountryList.as_view()),
-    path('country/<int:pk>', views.CountryDetail.as_view(), name='country-list'),
-    path('user', views.UserList.as_view()),
+    path('', views.api_root),
+    path('country', views.CountryList.as_view(), name='country-list'),
+    path('country/<int:pk>', views.CountryDetail.as_view(), name='country-detail'),
+    path('user', views.UserList.as_view(), name='user-list'),
     path('user/<int:pk>', views.UserDetail.as_view(), name='user-detail'),
 ]
 
