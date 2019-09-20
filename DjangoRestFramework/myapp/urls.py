@@ -8,19 +8,36 @@ from . import views
 app_name = 'myapp'
 
 
-# Routers provide an easy way of automatically determining the URL conf.
-# router = routers.DefaultRouter()
-# router.register(r'country', views.CountryViewSet)
+country_list = views.CountryViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+country_detail = views.CountryViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'patch': 'partial_update',
+    'delete': 'destroy'
+})
+country_places = views.CountryViewSet.as_view({
+        'get': 'places'
+})
 
+user_list = views.UserViewSet.as_view({
+    'get': 'list'
+})
+user_detail = views.UserViewSet.as_view({
+    'get': 'retrieve'
+})
 
 # Wire up our API using automatic URL routing.
 urlpatterns = [
     # path('', include(router.urls)),
     path('', views.api_root),
-    path('country', views.CountryList.as_view(), name='country-list'),
-    path('country/<int:pk>', views.CountryDetail.as_view(), name='country-detail'),
-    path('user', views.UserList.as_view(), name='user-list'),
-    path('user/<int:pk>', views.UserDetail.as_view(), name='user-detail'),
+    path('country', country_list, name='country-list'),
+    path('country/<int:pk>', country_detail, name='country-detail'),
+    path('country/<int:pk>/places', country_places, name='country-detail-places'),
+    path('user', user_list, name='user-list'),
+    path('user/<int:pk>', user_detail, name='user-detail'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
