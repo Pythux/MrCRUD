@@ -59,12 +59,16 @@ REST_FRAMEWORK = {
         'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,  # how many objects per page are returned
 
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
+    # allow read-only access for unauthenticated users, no more
     'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'jwt_app.authentication.JSONWebTokenAuthentication',
+    ],
 }
+# APPEND_SLASH = False
 
 TEMPLATES = [
     {

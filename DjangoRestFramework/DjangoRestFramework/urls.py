@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from jwt_app.views import Auth
 
 
 urlpatterns = [
@@ -24,5 +25,6 @@ urlpatterns = [
 
     path('api/', include('myapp.urls')),
     path('api-auth/', include('rest_framework.urls',  # auth for browsable API
-                              namespace='rest_framework'))
+                              namespace='rest_framework')),
+    path('api/login', Auth.as_view()),
 ]
