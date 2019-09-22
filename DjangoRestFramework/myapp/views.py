@@ -6,7 +6,7 @@ from rest_framework.reverse import reverse
 from django.contrib.auth.models import User
 from .models import Country
 from .serializers import UserSerializer, CountrySerializer, NicePlaceSerializer
-from .permissions import IsOwnerOrReadOnly
+# from .permissions import IsOwnerOrReadOnly
 
 
 @api_view(['GET'])
@@ -29,7 +29,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class CountryViewSet(viewsets.ModelViewSet):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    # permission_classes = [IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
         """overide instance save"""
