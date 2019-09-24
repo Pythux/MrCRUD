@@ -1,7 +1,11 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <img
+      alt="Vue logo"
+      src="../assets/logo.png"
+    >
+    <HelloWorld msg="Welcome to Your Vue.js App" />
+    {{ get }}
   </div>
 </template>
 
@@ -10,9 +14,18 @@
 import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
-  name: 'home',
-  components: {
-    HelloWorld
-  }
+    name: 'Home',
+    components: {
+        HelloWorld,
+    },
+    data () {
+        return {
+            get: '',
+        }
+    },
+    mounted () {
+        this.$http.get('/')
+            .then(response => { this.get = response })
+    },
 }
 </script>
