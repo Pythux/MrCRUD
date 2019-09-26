@@ -39,10 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
+    'guardian',
     'myapp',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -54,6 +57,17 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'DjangoRestFramework.urls'
 
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:8080",
+]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend'
+)
+GUARDIAN_RAISE_403 = True
+
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
@@ -61,11 +75,16 @@ REST_FRAMEWORK = {
 
     # allow read-only access for unauthenticated users, no more
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        'rest_framework.permissions.IsAuthenticated',
+        # 'myapp.permissions.DjangoModelPermissionsView',
+        # 'myapp.permissions.DjangoObjectPermissionsView',
+        'rest_framework.permissions.DjangoObjectPermissions',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'jwt_app.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
 }
 # APPEND_SLASH = False
