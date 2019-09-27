@@ -63,7 +63,6 @@ DjangoObjectPermissions:
 # myuser.groups.add(group, group, ...)
 """ Model Permission:
 
-from django.contrib.auth import authenticate
 from django.contrib.auth.models import Permission, User, Group
 from django.contrib.contenttypes.models import ContentType
 
