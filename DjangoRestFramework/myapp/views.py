@@ -3,7 +3,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from guardian.models import UserObjectPermission
+from django.contrib.contenttypes.models import ContentType
+from guardian.models import UserObjectPermission, GroupObjectPermission
 
 from django.contrib.auth.models import User, Group
 from .models import Post
@@ -51,3 +52,11 @@ class PostViewSet(viewsets.ModelViewSet):
         obj = serializer.save(creator=self.request.user)
         UserObjectPermission.objects.assign_perm('change_post', self.request.user, obj=obj)
         UserObjectPermission.objects.assign_perm('delete_post', self.request.user, obj=obj)
+
+    def perform_destroy(self, instance):
+        content_type = ContentType.objects.get_for_model(Post)
+        UserObjectPermission.objects.filter(
+            object_pk=instance.pk, content_type=content_type).delete()
+        GroupObjectPermission.objects.filter(
+            object_pk=instance.pk, content_type=content_type).delete()
+        instance.delete()
