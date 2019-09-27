@@ -5,7 +5,7 @@ import router from './router'
 
 Vue.config.productionTip = false
 
-const token = 'eyJpZCI6NSwiaWF0IjoxNTY5MzM2OTU1fQ.RuGZ1K33-t574RU4OX4kuTeR-BdKZTcB8Jvi2Z-0t98'
+const token = 'eyJpZCI6OCwiaWF0IjoxNTY5NTYwMTI3fQ.0FEhoqKbSKlXF_778uGKNK-SJ7VYSOjh4lAwJ0IZNWE'
 Vue.prototype.$http = Axios.create(
     {
         baseURL: 'http://localhost:8000/api',
