@@ -62,13 +62,18 @@ export default {
         submit () {
             let payload = { title: this.title, content: this.content }
             let complement = ''
+            let action = 'created'
             let http = this.$http.post
             if (this.id !== undefined) {
                 http = this.$http.put
                 complement = `/${this.id}`
+                action = 'updated'
             }
             http(`/post${complement}`, payload)
-                .then(result => this.$router.push({ name: 'home' }))
+                .then(result => {
+                    this.$store.commit('toast', { title: `post ${action} successfully !` })
+                    this.$router.push({ name: 'home' })
+                })
         },
     },
 }

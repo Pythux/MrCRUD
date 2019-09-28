@@ -47,7 +47,10 @@ export default {
     },
     methods: {
         deleteItem () {
-            this.$http.delete(`/post/${this.id}`).then(this.$router.push({ name: 'home' }))
+            this.$http.delete(`/post/${this.id}`).then(() => {
+                this.$store.commit('toast', { title: 'post deleted successfully !' })
+                this.$router.push({ name: 'home' })
+            })
         },
     },
 }

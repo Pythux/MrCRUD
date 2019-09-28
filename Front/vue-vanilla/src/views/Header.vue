@@ -7,11 +7,11 @@
             Creative's Mind
           </h1>
         </router-link>
-        <div class="p-3 blockquote align-self-end">
-          <footer class="blockquote-footer" style="color: #efefef">
-            Mr. CRUD
-          </footer>
-        </div>
+      </div>
+      <div class="p-3 blockquote align-self-end">
+        <footer class="blockquote-footer" style="color: #efefef">
+          Mr. CRUD
+        </footer>
       </div>
     </div>
   </div>
