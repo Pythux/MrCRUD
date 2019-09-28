@@ -10,7 +10,6 @@ export default new Vuex.Store({
     },
     mutations: {
         toast (state, toast) {
-            toast.id = state.toast_id_count++
             state.toasts.push(toast)
         },
         delete_toast ({ toasts }, id) {
@@ -18,6 +17,15 @@ export default new Vuex.Store({
             if (index !== -1) {
                 toasts.splice(index, 1)
             }
+        },
+    },
+    actions: {
+        toast ({ commit, state }, toast) {
+            toast.id = state.toast_id_count++
+            commit('toast', toast)
+            setTimeout(() => {
+                commit('delete_toast', toast.id)
+            }, 6000)
         },
     },
 })

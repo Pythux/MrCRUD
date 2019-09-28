@@ -71,7 +71,7 @@ export default {
             }
             http(`/post${complement}`, payload)
                 .then(result => {
-                    this.$store.commit('toast', { title: `post ${action} successfully !` })
+                    this.$store.dispatch('toast', { title: `post ${action} successfully !` })
                     this.$router.push({ name: 'home' })
                 })
         },
