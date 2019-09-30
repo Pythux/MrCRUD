@@ -5,6 +5,8 @@ from .models import Post
 
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(source='pk', read_only=True)
+
     class Meta:
         model = Post
         fields = '__all__'
