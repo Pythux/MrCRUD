@@ -8,10 +8,11 @@ import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import '@mdi/font/css/materialdesignicons.css'
 
 // Only import what you need!
-import { UserPlusIcon, KeyIcon, TerminalIcon } from 'vue-feather-icons'
+import { UserPlusIcon, KeyIcon, TerminalIcon, LayersIcon } from 'vue-feather-icons'
 
 let globalComponents = []
-globalComponents = globalComponents.concat([UserPlusIcon, KeyIcon, TerminalIcon]) // feather icons
+globalComponents = globalComponents.concat(
+    [UserPlusIcon, KeyIcon, TerminalIcon, LayersIcon]) // feather icons
 
 globalComponents.forEach(component => {
     Vue.component(component.name, component)
