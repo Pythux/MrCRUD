@@ -18,6 +18,11 @@ module.exports = {
             "error",
             "always-multiline"
         ],
+        "space-before-function-paren": ["error", {
+            "anonymous": "never",
+            "named": "never",
+            "asyncArrow": "always",
+        }],
         "vue/max-attributes-per-line": [
             "error",
             {

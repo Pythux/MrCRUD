@@ -17,12 +17,12 @@
 <script>
 export default {
     computed: {
-        username () {
+        username() {
             return this.$store.state.username
         },
     },
     methods: {
-        logout () {
+        logout() {
             this.$store.dispatch('logout')
             this.$router.push({ name: 'login' })
         },
