@@ -1,12 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from './store'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
     mode: 'history',
     base: process.env.BASE_URL,
     routes: [
+        {
+            path: '/',
+            name: 'home',
+            components: { default: () => import('./views/Home.vue') },
+        },
         {
             path: '/login',
             name: 'login',
@@ -21,3 +27,22 @@ export default new Router({
         },
     ],
 })
+
+router.beforeEach((to, from, next) => {
+    if (localStorage.getItem('usernameAndToken')) {
+        store.dispatch('stored_login')
+    }
+    let isAuth = store.state.authToken
+    let goAuth = to.name === 'login' || to.name === 'sign-in'
+    if (isAuth && goAuth) {
+        next({ name: 'home' })
+        return
+    }
+    if (!isAuth && !goAuth) {
+        next({ name: 'login', params: { action: 'login' } })
+        return
+    }
+    next()
+})
+
+export default router

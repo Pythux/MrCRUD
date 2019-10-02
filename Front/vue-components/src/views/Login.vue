@@ -76,11 +76,6 @@ export default {
             password: '',
         }
     },
-    beforeRouteEnter (to, from, next) {
-        console.log('beforeRouteEnter')
-        // check if already logged in
-        next()
-    },
     computed: {
         isActionLogin () { return this.action === 'login' },
         otherAction () { return this.isActionLogin ? 'sign-in' : 'login' },
@@ -100,31 +95,30 @@ export default {
     },
     methods: {
         submit () {
+            const catcher = response => {
+                if (response.response.data.username) {
+                    this.addLoginErrorValidation(response.response.data.username[0])
+                } else return Promise.reject(response)
+            }
             if (this.$refs.form.validate()) {
                 if (this.isActionLogin) {
                     this.$http.get('/login', { auth: { username: this.login, password: this.password } })
-                        .then(result => this.$store.commit('set_authToken', result.data.jwt))
-                        .catch(response => {
-                            if (response.response.data.username) {
-                                let username = this.login
-                                let errormsg = response.response.data.username[0]
-                                this.loginRules.push(v => v !== username || errormsg)
-                            }
-                            this.$refs.form.validate()
+                        .then(result => {
+                            this.$store.dispatch('login', { token: result.data.jwt, username: this.login })
+                            this.$router.push({ name: 'home' })
                         })
+                        .catch(catcher)
                 } else {
                     this.$http.post('/user', { username: this.login, password: this.password })
                         .then(result => console.log(result))
-                        .catch(response => {
-                            if (response.response.data.username) {
-                                let username = this.login
-                                let errormsg = response.response.data.username[0]
-                                this.loginRules.push(v => v !== username || errormsg)
-                            }
-                            this.$refs.form.validate()
-                        })
+                        .catch(catcher)
                 }
             }
+        },
+        addLoginErrorValidation (errorMsg) {
+            let login = this.login
+            this.loginRules.push(v => v !== login || errorMsg)
+            this.$refs.form.validate()
         },
         resetValidation () {
             this.$refs.form.resetValidation()
