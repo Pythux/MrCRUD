@@ -100,17 +100,18 @@ export default {
                     this.addLoginErrorValidation(response.response.data.username[0])
                 } else return Promise.reject(response)
             }
+            const login = () => this.$http.get('/login', { auth: { username: this.login, password: this.password } })
+                .then(result => {
+                    this.$store.dispatch('login', { token: result.data.jwt, username: this.login })
+                    this.$router.push({ name: 'home' })
+                })
+                .catch(catcher)
             if (this.$refs.form.validate()) {
                 if (this.isActionLogin) {
-                    this.$http.get('/login', { auth: { username: this.login, password: this.password } })
-                        .then(result => {
-                            this.$store.dispatch('login', { token: result.data.jwt, username: this.login })
-                            this.$router.push({ name: 'home' })
-                        })
-                        .catch(catcher)
+                    login()
                 } else {
                     this.$http.post('/user', { username: this.login, password: this.password })
-                        .then(result => console.log(result))
+                        .then(result => login())
                         .catch(catcher)
                 }
             }
