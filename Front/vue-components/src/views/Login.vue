@@ -19,7 +19,7 @@
                 <span>{{ otherActionTxt }}</span>
               </v-tooltip>
             </v-toolbar>
-            <v-form ref="form" v-model="valid" lazy-validation>
+            <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="submit">
               <v-card-text>
                 <v-text-field v-model="login" label="Login" name="login" :rules="loginRules" prepend-icon="mdi-account-question" type="text" />
                 <v-text-field v-model="password" label="Password" name="password" type="password" :rules="passwordRules">
@@ -30,7 +30,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn :disabled="!valid" color="primary" style="text-transform: none" @click="validate">
+                <v-btn type="submit" :disabled="!valid" color="primary" style="text-transform: none">
                   {{ actionTxt }}
                 </v-btn>
               </v-card-actions>
@@ -94,11 +94,12 @@ export default {
     watch: {
         action () {
             // on switch of action:
+            this.loginRules = this.loginRules.slice(0, 2)
             this.resetValidation()
         },
     },
     methods: {
-        validate () {
+        submit () {
             if (this.$refs.form.validate()) {
                 if (this.isActionLogin) {
                     this.$http.get('/login', { auth: { username: this.login, password: this.password } })
