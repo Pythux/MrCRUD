@@ -3,14 +3,17 @@
     <v-row>
       <v-col v-for="modulo_i in 3" :key="modulo_i" cols="12" sm="6" md="4">
         <transition-group name="slide">
-          <v-card v-for="post in get_posts_modulo(3, modulo_i)" :key="post.id" class="mt-5" hover>
+          <v-card v-for="post in get_posts_modulo(3, modulo_i)" :key="post.url" class="mt-5" hover>
             <v-card-title v-highlight:color.delayed="'green'">
               {{ post.title }}
             </v-card-title>
             <v-card-text style="white-space: pre-wrap;">
               {{ post.content }}
             </v-card-text>
-            <v-card-actions><v-btn>yo</v-btn></v-card-actions>
+            <v-card-actions>
+              by: {{ $store.state.users[post.creator] }}
+              <v-btn>yo</v-btn>
+            </v-card-actions>
           </v-card>
         </transition-group>
       </v-col>
@@ -49,7 +52,14 @@ export default {
     },
     methods: {
         get_posts() {
-            this.$http.get('/post').then(response => { this.posts = response.data.results })
+            this.$http.get('/post').then(response => {
+                this.posts = response.data.results.map(post => {
+                    post.creator = this.$http.getRelative(post.creator)
+                    post.url = this.$http.getRelative(post.url)
+                    this.$store.dispatch('check-user', post.creator)
+                    return post
+                })
+            })
         },
         get_posts_modulo(modulo, i) {
             i--

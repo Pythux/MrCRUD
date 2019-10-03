@@ -22,4 +22,12 @@ axiosAuth.interceptors.request.use(
     }
 )
 
+axiosAuth.getRelative = absURL => {
+    const base = axiosAuth.defaults.baseURL
+    if (absURL.startsWith(base)) {
+        return absURL.substr(base.length)
+    }
+    return null
+}
+
 export default axiosAuth
