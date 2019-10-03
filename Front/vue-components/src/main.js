@@ -20,6 +20,8 @@ globalComponents.forEach(component => {
 
 Vue.prototype.$http = axiosAuth
 
+// Vue.directive('name', Directive) // v-name
+
 new Vue({
     router,
     store,
