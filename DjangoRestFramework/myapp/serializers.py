@@ -13,7 +13,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ('creator',)
         extra_kwargs = {
             'url': {'view_name': 'myapp:post-detail'},
-            'creator': {'view_name': 'myapp:user-detail'}
+            'creator': {'view_name': 'myapp:myuser-detail'}
         }
 
 
@@ -25,7 +25,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['id', 'username', 'url', 'post_set', 'is_staff', 'password']
         read_only_fields = ('post_set', 'is_staff')
         extra_kwargs = {
-            'url': {'view_name': 'myapp:user-detail'},
+            'url': {'view_name': 'myapp:myuser-detail'},
             'post_set': {'view_name': 'myapp:post-detail'}
         }
 

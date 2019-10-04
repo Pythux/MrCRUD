@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 from time import sleep  # slower network
+from functools import wraps
 
 from django.contrib.contenttypes.models import ContentType
 from guardian.models import UserObjectPermission, GroupObjectPermission
@@ -12,6 +13,14 @@ from django.contrib.auth.models import Group
 from .models import Post, MyUser
 from .serializers import UserSerializer, PostSerializer
 from .permissions import UserModelPermission
+
+
+def throttling(func):
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        sleep(1.2)
+        return func(*args, **kwargs)
+    return func_wrapper
 
 
 @api_view(['GET'])
@@ -29,12 +38,13 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [UserModelPermission]
 
+    @throttling
     def perform_create(self, serializer):
         user = serializer.save()
-        user.groups.add([Group.objects.filter(name=name).get() for name in
+        user.groups.add(*[Group.objects.filter(name=name).get() for name in
                         ['viewers', 'posters', 'editors']])
-        sleep(1.2)  # slower network
 
+    @throttling
     def perform_update(self, serializer):
         """special treatement for password, on PUT/PATCH"""
         if 'password' in serializer.validated_data:
@@ -42,7 +52,6 @@ class UserViewSet(viewsets.ModelViewSet):
             user = serializer.instance
             user.set_password(new_password)
         serializer.save()
-        sleep(1.2)  # slower network
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -50,12 +59,13 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
+    @throttling
     def perform_create(self, serializer):
         obj = serializer.save(creator=self.request.user)
         UserObjectPermission.objects.assign_perm('change_post', self.request.user, obj=obj)
         UserObjectPermission.objects.assign_perm('delete_post', self.request.user, obj=obj)
-        sleep(1.2)  # slower network
 
+    @throttling
     def perform_destroy(self, instance):
         content_type = ContentType.objects.get_for_model(Post)
         UserObjectPermission.objects.filter(
@@ -63,16 +73,15 @@ class PostViewSet(viewsets.ModelViewSet):
         GroupObjectPermission.objects.filter(
             object_pk=instance.pk, content_type=content_type).delete()
         instance.delete()
-        sleep(0.8)  # slower network
 
+    @throttling
     def retrieve(self, *args, **kwargs):
-        sleep(1.2)  # slower network
         return super().retrieve(*args, **kwargs)
 
+    @throttling
     def list(self, *args, **kwargs):
-        sleep(0.2)  # slower network
-        return super().retrieve(*args, **kwargs)
+        return super().list(*args, **kwargs)
 
+    @throttling
     def update(self, *args, **kwargs):
-        sleep(1.2)  # slower network
-        return super().retrieve(*args, **kwargs)
+        return super().update(*args, **kwargs)
