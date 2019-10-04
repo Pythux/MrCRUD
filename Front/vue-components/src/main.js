@@ -4,18 +4,16 @@ import router from './router'
 import store from './store'
 import axiosAuth from './axios-auth'
 import vuetify from './plugins/vuetify'
-import 'roboto-fontface/css/roboto/roboto-fontface.css'
-import '@mdi/font/css/materialdesignicons.css'
 
 // Only import what you need!
 import { UserPlusIcon, KeyIcon, TerminalIcon,
-    LayersIcon, Edit3Icon, SaveIcon, SendIcon,
+    LayersIcon, Edit3Icon, SaveIcon, SendIcon, UserIcon,
 } from 'vue-feather-icons' // feather icons
 
 let globalComponents = []
 globalComponents = globalComponents.concat([
     UserPlusIcon, KeyIcon, TerminalIcon, LayersIcon,
-    Edit3Icon, SaveIcon, SendIcon]) // feather icons
+    Edit3Icon, SaveIcon, SendIcon, UserIcon]) // feather icons
 
 globalComponents.forEach(component => {
     Vue.component(component.name, component)

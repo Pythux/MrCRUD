@@ -20,7 +20,11 @@
           </v-toolbar>
           <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="submit">
             <v-card-text>
-              <v-text-field v-model="login" label="Login" name="login" :rules="loginRules" prepend-icon="mdi-account-question" type="text" />
+              <v-text-field v-model="login" label="Login" name="login" :rules="loginRules" type="text">
+                <template v-slot:prepend>
+                  <user-icon />
+                </template>
+              </v-text-field>
               <v-text-field v-model="password" label="Password" name="password" type="password" :rules="passwordRules">
                 <template v-slot:prepend>
                   <key-icon />
