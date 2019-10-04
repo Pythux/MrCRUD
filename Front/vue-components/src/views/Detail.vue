@@ -3,25 +3,30 @@
     <v-row justify="center">
       <v-col xs="12" sm="8" md="6">
         <v-card :loading="loadingCard">
-          <v-card-title>
-            <v-btn icon fab color="purple" @click="editBtn">
-              <edit-3-icon v-if="!edit" />
-              <send-icon v-else />
-            </v-btn>
-            <v-text-field v-if="edit" v-model="title" @keyup.enter="submit" />
-            <template v-else>
-              {{ title }}
-            </template>
-          </v-card-title>
-          <v-card-text style="white-space: pre-wrap;">
-            <v-textarea v-if="edit" v-model="content" auto-grow />
-            <template v-else>
-              {{ content }}
-            </template>
-          </v-card-text>
-          <v-card-actions v-if="post">
-            by: {{ $store.state.users[post.creator] }}
-          </v-card-actions>
+          <v-form @submit.prevent="submit">
+            <v-card-title>
+              <v-btn icon fab color="purple" @click="editBtn">
+                <edit-3-icon v-if="!edit" />
+                <send-icon v-else />
+              </v-btn>
+              <v-text-field v-if="edit" v-model="title" />
+              <template v-else>
+                {{ title }}
+              </template>
+            </v-card-title>
+            <v-card-text style="white-space: pre-wrap;">
+              <v-textarea v-if="edit" v-model="content" auto-grow />
+              <template v-else>
+                {{ content }}
+              </template>
+            </v-card-text>
+            <v-card-actions v-if="edit">
+              <!-- {{ $store.state.users[post.creator] }} -->
+              <v-btn type="submit">
+                <save-icon />
+              </v-btn>
+            </v-card-actions>
+          </v-form>
         </v-card>
       </v-col>
     </v-row>
