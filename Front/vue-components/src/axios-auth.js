@@ -22,12 +22,27 @@ axiosAuth.interceptors.request.use(
     }
 )
 
-axiosAuth.getRelative = absURL => {
+const toRelative = absURL => {
     const base = axiosAuth.defaults.baseURL
     if (absURL.startsWith(base)) {
         return absURL.substr(base.length)
     }
     return null
+}
+
+axiosAuth.toRelative = (absURLorObj, listAttr) => {
+    if (listAttr === undefined) {
+        return toRelative(absURLorObj)
+    }
+    let obj = Object.assign({}, absURLorObj) // no side effect
+    listAttr.forEach(el => {
+        if (obj[el] instanceof Array) {
+            obj[el] = obj[el].map(toRelative)
+        } else {
+            obj[el] = toRelative(obj[el])
+        }
+    })
+    return obj
 }
 
 export default axiosAuth

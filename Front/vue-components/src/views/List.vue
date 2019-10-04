@@ -12,7 +12,9 @@
             </v-card-text>
             <v-card-actions>
               by: {{ $store.state.users[post.creator] }}
-              <v-btn>yo</v-btn>
+              <router-link :to="{name: 'detail', params:{ pathPost: post.url }}">
+                <v-btn>yo</v-btn>
+              </router-link>
             </v-card-actions>
           </v-card>
         </transition-group>
@@ -54,8 +56,7 @@ export default {
         get_posts() {
             this.$http.get('/post').then(response => {
                 this.posts = response.data.results.map(post => {
-                    post.creator = this.$http.getRelative(post.creator)
-                    post.url = this.$http.getRelative(post.url)
+                    post = this.$http.toRelative(post, ['creator', 'url'])
                     this.$store.dispatch('check-user', post.creator)
                     return post
                 })

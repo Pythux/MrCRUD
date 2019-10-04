@@ -14,6 +14,12 @@ const router = new Router({
             components: { default: () => import('./views/List.vue'), header: () => import('./views/Header.vue') },
         },
         {
+            path: '/detail/:pathPost',
+            name: 'detail',
+            components: { default: () => import('./views/Detail.vue'), header: () => import('./views/Header.vue') },
+            props: { default: true },
+        },
+        {
             path: '/login',
             name: 'login',
             components: { default: () => import('./views/Login.vue') },
