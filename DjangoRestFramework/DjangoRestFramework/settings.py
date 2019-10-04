@@ -62,6 +62,8 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:8080",
 ]
 
+AUTH_USER_MODEL = 'myapp.MyUser'
+
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'guardian.backends.ObjectPermissionBackend'

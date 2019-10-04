@@ -1,11 +1,12 @@
 from django.contrib import admin
-from myapp.models import Post
+from myapp.models import Post, MyUser
 from guardian.admin import GuardedModelAdmin
 
 
 # With object permissions support
-class PostAdmin(GuardedModelAdmin):
+class Gardian(GuardedModelAdmin):
     pass
 
 
-admin.site.register(Post, PostAdmin)
+admin.site.register(Post, Gardian)
+admin.site.register(MyUser, Gardian)

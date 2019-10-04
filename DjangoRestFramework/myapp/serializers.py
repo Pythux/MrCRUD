@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from django.contrib.auth.models import User
-from .models import Post
+# from django.contrib.auth.models import User
+from .models import Post, MyUser
 
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
@@ -21,7 +21,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
 
     class Meta:
-        model = User
+        model = MyUser
         fields = ['id', 'username', 'url', 'post_set', 'is_staff', 'password']
         read_only_fields = ('post_set', 'is_staff')
         extra_kwargs = {
@@ -31,4 +31,4 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     def create(self, validated_data):
         """handle the password"""
-        return User.objects.create_user(**validated_data)
+        return MyUser.objects.create_user(**validated_data)

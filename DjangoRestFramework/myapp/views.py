@@ -8,8 +8,8 @@ from time import sleep  # slower network
 from django.contrib.contenttypes.models import ContentType
 from guardian.models import UserObjectPermission, GroupObjectPermission
 
-from django.contrib.auth.models import User, Group
-from .models import Post
+from django.contrib.auth.models import Group
+from .models import Post, MyUser
 from .serializers import UserSerializer, PostSerializer
 from .permissions import UserModelPermission
 
@@ -25,16 +25,14 @@ def api_root(request, format=None):
 
 class UserViewSet(viewsets.ModelViewSet):
     """This viewset automatically provides `list` and `detail` actions."""
-    queryset = User.objects.all()
+    queryset = MyUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [UserModelPermission]
 
     def perform_create(self, serializer):
         user = serializer.save()
-        group_view = Group.objects.filter(name='viewers').get()
-        group_add = Group.objects.filter(name='posters').get()
-        group_edit = Group.objects.filter(name='editors').get()  # change and delete permission
-        user.groups.add(group_view, group_add, group_edit)
+        user.groups.add([Group.objects.filter(name=name).get() for name in
+                        ['viewers', 'posters', 'editors']])
         sleep(1.2)  # slower network
 
     def perform_update(self, serializer):
