@@ -41,6 +41,8 @@ class UserViewSet(viewsets.ModelViewSet):
     @throttling
     def perform_create(self, serializer):
         user = serializer.save()
+        user.is_staff = True  # allow admin site
+        user.save()
         user.groups.add(*[Group.objects.filter(name=name).get() for name in
                         ['viewers', 'posters', 'editors']])
 
