@@ -5,17 +5,17 @@
         <v-card :loading="loadingCard">
           <v-form @submit.prevent="submit">
             <v-card-title>
-              <v-btn icon fab color="purple" @click="editBtn">
+              <v-btn icon fab color="purple" @click="submit">
                 <edit-3-icon v-if="!edit" />
                 <send-icon v-else />
               </v-btn>
-              <v-text-field v-if="edit" v-model="title" />
+              <v-text-field v-if="edit" v-model="title" label="Title" />
               <template v-else>
                 {{ title }}
               </template>
             </v-card-title>
             <v-card-text style="white-space: pre-wrap;">
-              <v-textarea v-if="edit" v-model="content" auto-grow />
+              <v-textarea v-if="edit" v-model="content" label="Content" auto-grow />
               <template v-else>
                 {{ content }}
               </template>
@@ -38,7 +38,7 @@ export default {
     props: {
         pathPost: {
             type: String,
-            requiered: true,
+            requiered: false,
             default: undefined,
         },
     },
@@ -51,6 +51,11 @@ export default {
             content: undefined,
         }
     },
+    computed: {
+        isCreation() {
+            return this.pathPost === undefined
+        },
+    },
     watch: {
         post(post, _) {
             this.title = post.title
@@ -58,28 +63,34 @@ export default {
         },
     },
     mounted() {
-        this.$http.get(this.pathPost).then(responce => {
-            this.post = this.$http.toRelative(responce.data, ['url', 'creator'])
-            this.$store.dispatch('check-user', this.post.creator)
+        if (this.isCreation) {
             this.loadingCard = false
-        })
+            this.edit = true
+        } else {
+            this.$http.get(this.pathPost).then(responce => {
+                this.post = this.$http.toRelative(responce.data, ['url', 'creator'])
+                this.$store.dispatch('check-user', this.post.creator)
+                this.loadingCard = false
+            })
+        }
     },
     methods: {
-        editBtn() {
-            if (this.edit) {
-                // save
+        submit() {
+            if (this.edit) { // save
                 this.loadingCard = true
-                this.$http.patch(this.pathPost, { title: this.title, content: this.content })
+                let saveMethode = payload => this.$http.put(this.pathPost, payload)
+                if (this.isCreation) {
+                    saveMethode = payload => this.$http.post('/post', payload)
+                }
+                saveMethode({ title: this.title, content: this.content })
                     .then(response => {
                         this.edit = false
                         this.loadingCard = false
                     })
-            } else {
-                // edit
-                this.edit = !this.edit
+            } else { // edit
+                this.edit = true
             }
         },
-        submit() { this.editBtn() },
     },
 }
 </script>

@@ -18,6 +18,10 @@ const router = new Router({
             name: 'detail',
             components: { default: () => import('./views/Detail.vue'), header: () => import('./views/Header.vue') },
             props: { default: true },
+        }, {
+            path: '/create',
+            name: 'create',
+            components: { default: () => import('./views/Detail.vue'), header: () => import('./views/Header.vue') },
         },
         {
             path: '/login',
