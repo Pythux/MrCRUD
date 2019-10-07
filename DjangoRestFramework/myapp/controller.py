@@ -11,7 +11,7 @@ from guardian.models import UserObjectPermission, GroupObjectPermission
 
 from django.contrib.auth.models import Group
 from .models import Post, MyUser
-from .serializers import UserSerializer, PostSerializer
+from .validators import UserSerializer, PostSerializer
 from .permissions import UserModelPermission
 
 
