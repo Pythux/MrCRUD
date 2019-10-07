@@ -22,6 +22,18 @@ axiosAuth.interceptors.request.use(
     }
 )
 
+async function throttling(returned) {
+    return new Promise(resolve => {
+        setTimeout(() => { resolve(returned) }, 2000)
+    })
+}
+
+axiosAuth.interceptors.request.use(config => {
+    return throttling(config)
+}, error => {
+    return Promise.reject(error)
+})
+
 const toRelative = absURL => {
     const base = axiosAuth.defaults.baseURL
     if (absURL.startsWith(base)) {
