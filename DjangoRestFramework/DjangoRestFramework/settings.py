@@ -71,6 +71,7 @@ AUTHENTICATION_BACKENDS = (
 GUARDIAN_RAISE_403 = True
 
 REST_FRAMEWORK = {
+    'DEFAULT_METADATA_CLASS': 'myapp.httpOption.AllowMetadata',
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,  # how many objects per page are returned

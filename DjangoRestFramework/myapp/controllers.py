@@ -12,6 +12,8 @@ from .models import Post, MyUser
 from .validators import UserSerializer, PostSerializer
 from .permissions import UserModelPermission
 
+from .controllers_mixins import AllowMixin
+
 
 @api_view(['GET'])
 @permission_classes((permissions.AllowAny,))
@@ -22,7 +24,7 @@ def api_root(request, format=None):
     })
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(AllowMixin, viewsets.ModelViewSet):
     """This viewset automatically provides `list` and `detail` actions."""
     queryset = MyUser.objects.all()
     serializer_class = UserSerializer
@@ -44,7 +46,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.save()
 
 
-class PostViewSet(viewsets.ModelViewSet):
+class PostViewSet(AllowMixin, viewsets.ModelViewSet):
     """This viewset automatically provides `list` and `detail` actions."""
     queryset = Post.objects.all()
     serializer_class = PostSerializer
