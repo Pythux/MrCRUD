@@ -36,13 +36,15 @@ export default new Vuex.Store({
             }
         },
         'check-user': ({ commit, state }, userPath) => {
-            http.get(userPath).then(response => {
-                let user = response.data
-                user = http.toRelative(user, ['url', 'post_set'])
-                if (!(user.url in state.users)) {
-                    commit('add-user', user)
-                }
-            })
+            if (!state.users[userPath]) {
+                http.get(userPath).then(response => {
+                    let user = response.data
+                    user = http.toRelative(user, ['url', 'post_set'])
+                    if (!(user.url in state.users)) {
+                        commit('add-user', user)
+                    }
+                })
+            }
         },
     },
 })

@@ -18,7 +18,7 @@
             <template v-else>
               {{ content }}
             </template>
-            {{ $store.state.users[post.creator] }}
+            <!-- {{ $store.state.users[post.creator] }} -->
           </v-card-text>
 
           <v-card-actions v-if="edit">
