@@ -24,7 +24,7 @@ axiosAuth.interceptors.request.use(
 
 async function throttling(returned) {
     return new Promise(resolve => {
-        setTimeout(() => { resolve(returned) }, 2000)
+        setTimeout(() => { resolve(returned) }, 200)
     })
 }
 

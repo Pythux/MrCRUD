@@ -3,7 +3,13 @@
     <v-row>
       <v-col v-for="modulo_i in 3" :key="modulo_i" cols="12" sm="6" md="4">
         <transition-group name="slide">
-          <v-card v-for="post in get_posts_modulo(3, modulo_i)" :key="post.url" class="mt-5" hover>
+          <v-card
+            v-for="post in get_posts_modulo(3, modulo_i)"
+            :key="post.url"
+            class="mt-5"
+            hover
+            @click="cardSelected(post.url)"
+          >
             <v-card-title v-highlight:color.delayed="'green'">
               {{ post.title }}
             </v-card-title>
@@ -12,19 +18,23 @@
             </v-card-text>
             <v-card-actions>
               by: {{ $store.state.users[post.creator] }}
-              <router-link :to="{name: 'detail', params:{ pathPost: post.url }}">
-                <v-btn>yo</v-btn>
-              </router-link>
             </v-card-actions>
           </v-card>
         </transition-group>
       </v-col>
     </v-row>
+    <v-overlay :value="overlay" opacity="0.8" :dark="false" light @click.native="overlay = false">
+      <comp-detail :path-post="pathPost" @click="$event.stopPropagation()" />
+    </v-overlay>
   </v-container>
 </template>
 
 <script>
+import Detail from './Detail.vue'
 export default {
+    components: {
+        'comp-detail': Detail,
+    },
     directives: {
         highlight: {
             bind(el, binding, vnode) {
@@ -47,6 +57,8 @@ export default {
     data() {
         return {
             posts: [],
+            overlay: false,
+            pathPost: undefined,
         }
     },
     created() {
@@ -67,6 +79,10 @@ export default {
             return this.posts.filter((post, index) => {
                 return index % modulo === i
             })
+        },
+        cardSelected(pathPost) {
+            this.pathPost = pathPost
+            this.overlay = true
         },
     },
 }

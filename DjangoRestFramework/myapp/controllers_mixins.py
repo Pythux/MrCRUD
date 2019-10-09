@@ -19,7 +19,6 @@ class AllowMixin:
                 if (not is_on_object and not permisson.has_permission(self.request, self)) \
                         or (is_on_object and not permisson.has_object_permission(self.request, self, obj)):
                     methods.remove(method)
-                    print('remove: ' + method)
                     break
 
         self.request.method = original_request_method

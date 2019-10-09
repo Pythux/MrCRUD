@@ -75,4 +75,10 @@ h1, h2, h3 {
         content: "\2014 \00A0" // em dash, nbsp
     }
 }
+
+// for https://vuetifyjs.com/en/components/overlays
+.v-overlay__content
+    position relative
+    width 100%
+
 </style>

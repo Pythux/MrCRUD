@@ -1,36 +1,35 @@
 <template>
-  <v-container fill-height>
-    <v-row justify="center">
-      <v-col xs="12" sm="8" md="6">
-        <v-card :loading="loadingCard">
-          <v-form @submit.prevent="submit">
-            <v-card-title>
-              <v-btn icon fab color="purple" @click="submit">
-                <edit-3-icon v-if="!edit" />
-                <send-icon v-else />
-              </v-btn>
-              <v-text-field v-if="edit" v-model="title" label="Title" />
-              <template v-else>
-                {{ title }}
-              </template>
-            </v-card-title>
-            <v-card-text style="white-space: pre-wrap;">
-              <v-textarea v-if="edit" v-model="content" label="Content" auto-grow />
-              <template v-else>
-                {{ content }}
-              </template>
-            </v-card-text>
-            <v-card-actions v-if="edit">
-              <!-- {{ $store.state.users[post.creator] }} -->
-              <v-btn type="submit">
-                <save-icon />
-              </v-btn>
-            </v-card-actions>
-          </v-form>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+  <v-row justify="center">
+    <v-col xs="12" sm="8" md="6">
+      <v-card :loading="loadingCard" @click.native="$emit('click', $event)">
+        <v-form @submit.prevent="submit">
+          <v-card-title>
+            <v-btn icon fab color="purple" @click="submit">
+              <edit-3-icon v-if="!edit" />
+              <send-icon v-else />
+            </v-btn>
+            <v-text-field v-if="edit" v-model="title" label="Title" />
+            <template v-else>
+              {{ title }}
+            </template>
+          </v-card-title>
+          <v-card-text style="white-space: pre-wrap;">
+            <v-textarea v-if="edit" v-model="content" label="Content" auto-grow />
+            <template v-else>
+              {{ content }}
+            </template>
+            {{ $store.state.users[post.creator] }}
+          </v-card-text>
+
+          <v-card-actions v-if="edit">
+            <v-btn type="submit">
+              <save-icon />
+            </v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
