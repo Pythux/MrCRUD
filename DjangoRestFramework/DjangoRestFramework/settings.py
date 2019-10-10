@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from corsheaders.defaults import default_headers
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -61,6 +63,8 @@ ROOT_URLCONF = 'DjangoRestFramework.urls'
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:8080",
 ]
+
+CORS_EXPOSE_HEADERS = list(default_headers) + ['Allow']
 
 AUTH_USER_MODEL = 'myapp.MyUser'
 
