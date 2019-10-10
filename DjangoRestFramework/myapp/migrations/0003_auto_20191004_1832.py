@@ -16,6 +16,8 @@ def create_post_group_permissions(apps, schema_editor):
     for index, codename in enumerate(['view_post', 'add_post', 'change_post']):
         groups[index].permissions.add(content_type.permission_set.filter(codename=codename).get())
 
+    groups[2].permissions.add(content_type.permission_set.filter(codename='delete_post').get())
+
 
 class Migration(migrations.Migration):
 

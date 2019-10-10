@@ -24,7 +24,7 @@
       </v-col>
     </v-row>
     <v-overlay :value="overlay" opacity="0.8" :dark="false" light @click.native="overlay = false">
-      <comp-detail :path-post="pathPost" @click="$event.stopPropagation()" />
+      <comp-detail :path-post="pathPost" @click="$event.stopPropagation()" @deleted="postDeleted(pathPost)" />
     </v-overlay>
   </v-container>
 </template>
@@ -83,6 +83,10 @@ export default {
         cardSelected(pathPost) {
             this.pathPost = pathPost
             this.overlay = true
+        },
+        postDeleted(pathPost) {
+            this.posts = this.posts.filter(post => post.url !== pathPost)
+            this.overlay = false
         },
     },
 }

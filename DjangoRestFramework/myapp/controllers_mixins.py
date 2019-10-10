@@ -16,7 +16,7 @@ class AllowMixin:
         for method in methods.copy():  # copy because we will delete elements of it
             self.request.method = method
             for permisson in self.get_permissions():
-                if (not is_on_object and not permisson.has_permission(self.request, self)) \
+                if (not permisson.has_permission(self.request, self)) \
                         or (is_on_object and not permisson.has_object_permission(self.request, self, obj)):
                     methods.remove(method)
                     break
