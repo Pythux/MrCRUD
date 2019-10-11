@@ -12,5 +12,12 @@ class Post(models.Model):
         return '{}, by {}'.format(self.title, self.creator)
 
 
+class UserLottie(models.Model):
+    """https://lottiefiles.com/: used for user profile animation"""
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True, on_delete=models.CASCADE)
+    lottie_json = models.TextField()
+
+
 class MyUser(AbstractUser):
+    """delete validation constaints"""
     username = models.CharField(max_length=40, unique=True)

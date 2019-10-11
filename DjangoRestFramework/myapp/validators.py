@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 # from django.contrib.auth.models import User
-from .models import Post, MyUser
+from .models import Post, MyUser, UserLottie
 
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
@@ -32,3 +32,9 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     def create(self, validated_data):
         """handle the password"""
         return MyUser.objects.create_user(**validated_data)
+
+
+class LottieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserLottie
+        fields = '__all__'

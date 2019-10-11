@@ -2,7 +2,20 @@ from rest_framework import permissions
 from rest_framework.permissions import DjangoModelPermissions, DjangoObjectPermissions
 
 
-class UserModelPermission(permissions.BasePermission):
+class OwnerModifyModelPermission(permissions.BasePermission):
+    """Custom permission to only allow owners of an object to edit it."""
+
+    def has_object_permission(self, request, view, obj):
+        """permission for object"""
+        if request.method in ('HEAD', 'OPTIONS', 'GET'):
+            return True
+
+        if request.method in ('DELETE', 'PATCH', 'PUT'):
+            return obj == request.user
+        return False
+
+
+class PostNoAuthModelPermission(permissions.BasePermission):
     """Custom permission to only allow owners of an object to edit it."""
 
     def has_permission(self, request, view):
@@ -18,20 +31,6 @@ class UserModelPermission(permissions.BasePermission):
         if request.method in ('DELETE', 'PATCH', 'PUT'):
             """will be checked by object_permission"""
             return True
-
-        return False
-
-    def has_object_permission(self, request, view, obj):
-        """permission for detail:"""
-        if request.method in ('HEAD', 'OPTIONS'):
-            return True
-
-        if request.method == 'GET':
-            if request.user and request.user.is_authenticated:
-                return True
-
-        if request.method in ('DELETE', 'PATCH', 'PUT'):
-            return obj == request.user
         return False
 
 
