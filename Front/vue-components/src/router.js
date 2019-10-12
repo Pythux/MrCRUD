@@ -39,10 +39,11 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    if (localStorage.getItem('usernameAndToken')) {
+    let isAuth = store.state.authToken
+    if ((!isAuth) && localStorage.getItem('usernameAndToken')) {
         store.dispatch('stored_login')
     }
-    let isAuth = store.state.authToken
+    isAuth = store.state.authToken
     let goAuth = to.name === 'login' || to.name === 'sign-in'
     if (isAuth && goAuth) {
         next({ name: 'home' })

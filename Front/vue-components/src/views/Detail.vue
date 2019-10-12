@@ -53,6 +53,7 @@ export default {
             content: undefined,
             permissions: { edit: false, delete: false },
             errors: { title: null, content: null },
+            userProfile: undefined,
         }
     },
     computed: {

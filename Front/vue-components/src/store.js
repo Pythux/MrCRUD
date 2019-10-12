@@ -30,6 +30,7 @@ export default new Vuex.Store({
             commit('set_username_and_token', { username: null, token: null })
         },
         stored_login({ dispatch }) {
+            console.log('yo')
             let usernameAndToken = JSON.parse(localStorage.getItem('usernameAndToken'))
             if (usernameAndToken) {
                 dispatch('login', usernameAndToken)
@@ -41,7 +42,13 @@ export default new Vuex.Store({
                     let user = response.data
                     user = http.toRelative(user, ['url', 'post_set'])
                     if (!(user.url in state.users)) {
-                        commit('add-user', user)
+                        // commit('add-user', user)
+                        http.get(`/user_profile/${user.id}`)
+                            .then(response => { user.profile = response.data })
+                            .catch(error => console.log(error.response))
+                            .finally(() => {
+                                commit('add-user', user)
+                            })
                     }
                 })
             }

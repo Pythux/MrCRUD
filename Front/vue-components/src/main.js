@@ -5,6 +5,8 @@ import store from './store'
 import axiosAuth from './axios-auth'
 import vuetify from './plugins/vuetify'
 
+import Lottie from 'vue-lottie'
+
 // Only import what you need!
 import { UserPlusIcon, KeyIcon, TerminalIcon,
     LayersIcon, Edit3Icon, SaveIcon, SendIcon, UserIcon, PlusCircleIcon,
@@ -12,6 +14,8 @@ import { UserPlusIcon, KeyIcon, TerminalIcon,
 } from 'vue-feather-icons' // feather icons
 
 let globalComponents = []
+Lottie.name = 'Lottie'
+globalComponents.push(Lottie)
 globalComponents = globalComponents.concat([
     UserPlusIcon, KeyIcon, TerminalIcon, LayersIcon,
     Edit3Icon, SaveIcon, SendIcon, UserIcon, PlusCircleIcon,
