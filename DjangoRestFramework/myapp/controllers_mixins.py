@@ -1,10 +1,16 @@
-
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import get_object_or_404
 
 
 class AllowMixin:
     def _allowed_methods(self):
         methods = [m.upper() for m in self.http_method_names if hasattr(self, m)]
+
+        # check if is auth:
+        try:
+            self.request.auth
+        except AuthenticationFailed:
+            return methods
 
         original_request_method = self.request.method  # change self.request.method for each methods
         is_on_object = True
