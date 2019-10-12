@@ -19,6 +19,12 @@
               {{ content }}
             </template>
             <!-- {{ $store.state.users[post.creator] }} -->
+            <lottie
+              v-if="animationData"
+              :options="{animationData}"
+              :height="400"
+              :width="400"
+            />
           </v-card-text>
 
           <v-card-actions v-if="edit">
@@ -54,11 +60,20 @@ export default {
             permissions: { edit: false, delete: false },
             errors: { title: null, content: null },
             userProfile: undefined,
+            animation: {
+                anim: undefined,
+            },
         }
     },
     computed: {
         isCreation() {
             return this.pathPost === undefined
+        },
+        animationData() {
+            if (this.post) {
+                return this.$store.state.users[this.post.creator].lottie
+            }
+            return undefined
         },
     },
     watch: {
@@ -81,6 +96,10 @@ export default {
         }
     },
     methods: {
+        handleAnimation(anim) {
+            this.animation.anim = anim
+            // anim.play()
+        },
         genPermissions(allowSet) {
             this.permissions.edit = allowSet.has('PUT')
             this.permissions.delete = allowSet.has('DELETE')

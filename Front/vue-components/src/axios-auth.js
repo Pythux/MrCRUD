@@ -13,7 +13,7 @@ const axiosAuth = Axios.create(
 
 axiosAuth.interceptors.request.use(
     config => {
-        if (store.state.authToken) {
+        if (config.url.startsWith('/') && store.state.authToken) {
             config.headers['Authorization'] = `Bearer ${store.state.authToken}`
         }
         return config

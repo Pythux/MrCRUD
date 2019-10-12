@@ -43,9 +43,8 @@ export default new Vuex.Store({
                     user = http.toRelative(user, ['url', 'post_set'])
                     if (!(user.url in state.users)) {
                         // commit('add-user', user)
-                        http.get(`/user_profile/${user.id}`)
-                            .then(response => { user.profile = response.data })
-                            .catch(error => console.log(error.response))
+                        http.get(`/user_lottie/${user.id}`)
+                            .then(response => { user.lottie = JSON.parse(response.data.lottie_json) })
                             .finally(() => {
                                 commit('add-user', user)
                             })

@@ -17,7 +17,7 @@
               {{ post.content }}
             </v-card-text>
             <v-card-actions>
-              by: {{ $store.state.users[post.creator] }}
+              by: {{ $store.state.users[post.creator].username }}
             </v-card-actions>
           </v-card>
         </transition-group>
@@ -59,10 +59,12 @@ export default {
             posts: [],
             overlay: false,
             pathPost: undefined,
+            animationData: undefined,
         }
     },
     created() {
         this.get_posts()
+        this.$http.get('https://assets8.lottiefiles.com/datafiles/HU9CFiQtwCxbDDR/data.json').then(response => { this.animationData = response.data })
     },
     methods: {
         get_posts() {
