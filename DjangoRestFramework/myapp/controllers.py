@@ -23,7 +23,7 @@ def api_root(request, format=None):
     })
 
 
-class UserViewSet(AllowMixin, viewsets.ModelViewSet):
+class UserSet(AllowMixin, viewsets.ModelViewSet):
     """This viewset automatically provides `list` and `detail` actions."""
     queryset = MyUser.objects.all()
     serializer_class = UserSerializer
@@ -45,7 +45,7 @@ class UserViewSet(AllowMixin, viewsets.ModelViewSet):
         serializer.save()
 
 
-class PostViewSet(AllowMixin, viewsets.ModelViewSet):
+class PostSet(AllowMixin, viewsets.ModelViewSet):
     """This viewset automatically provides `list` and `detail` actions."""
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -64,7 +64,7 @@ class PostViewSet(AllowMixin, viewsets.ModelViewSet):
         instance.delete()
 
 
-class LottieViewSet(AllowMixin, viewsets.ModelViewSet):
+class UserLottieSet(AllowMixin, viewsets.ModelViewSet):
     """store lottie file for user profile"""
     queryset = UserLottie.objects.all()
     serializer_class = LottieSerializer
