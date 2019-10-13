@@ -19,12 +19,22 @@
               {{ content }}
             </template>
             <!-- {{ $store.state.users[post.creator] }} -->
-            <lottie
-              v-if="animationData"
-              :options="{animationData}"
-              :height="400"
-              :width="400"
-            />
+            <v-divider />
+            <v-card max-width="200" style="margin-top: 10px">
+              <!-- class="d-flex align-center justify-start" on v-card do the same thing -->
+              <v-row align="center" justify="start">
+                <lottie
+                  v-if="animationData"
+                  style="margin: 0; margin-left: 14px; margin-top: 2px; margin-bottom: 2px;"
+                  :options="{animationData}"
+                  :height="100"
+                  :width="100"
+                />
+                <div class="username">
+                  {{ $store.state.users[post.creator].username }}
+                </div>
+              </v-row>
+            </v-card>
           </v-card-text>
 
           <v-card-actions v-if="edit">
@@ -135,3 +145,9 @@ export default {
     },
 }
 </script>
+
+<style lang="stylus" scoped>
+.username
+    color blue
+    text-shadow 1px 1px red
+</style>

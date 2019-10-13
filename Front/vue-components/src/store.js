@@ -30,7 +30,6 @@ export default new Vuex.Store({
             commit('set_username_and_token', { username: null, token: null })
         },
         stored_login({ dispatch }) {
-            console.log('yo')
             let usernameAndToken = JSON.parse(localStorage.getItem('usernameAndToken'))
             if (usernameAndToken) {
                 dispatch('login', usernameAndToken)
