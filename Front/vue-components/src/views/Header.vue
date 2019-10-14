@@ -32,9 +32,18 @@
                 <LayersIcon />{{ username }}
               </v-btn>
             </template>
-            <v-btn @click="logout">
-              logout
-            </v-btn>
+            <v-list>
+              <v-list-item @click="$router.push({name: 'config'})">
+                <v-list-item-title>
+                  config
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="logout">
+                <v-list-item-title>
+                  logout
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
           </v-menu>
         </v-row>
       </v-col>

@@ -14,14 +14,18 @@ const router = new Router({
             components: { default: () => import('./views/List.vue'), header: () => import('./views/Header.vue') },
         },
         {
-            path: '/detail/:pathPost',
+            path: '/detail/post/:idPost',
             name: 'detail',
             components: { default: () => import('./views/Detail.vue'), header: () => import('./views/Header.vue') },
-            props: { default: true },
+            props: { default: (route) => { return { pathPost: `/post/${route.params.idPost}` } } },
         }, {
             path: '/create',
             name: 'create',
             components: { default: () => import('./views/Detail.vue'), header: () => import('./views/Header.vue') },
+        }, {
+            path: '/config',
+            name: 'config',
+            components: { default: () => import('./views/Config.vue'), header: () => import('./views/Header.vue') },
         },
         {
             path: '/login',

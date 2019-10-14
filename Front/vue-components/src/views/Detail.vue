@@ -18,7 +18,6 @@
             <template v-else>
               {{ content }}
             </template>
-            <!-- {{ $store.state.users[post.creator] }} -->
             <v-divider />
             <v-card max-width="200" style="margin-top: 10px">
               <!-- class="d-flex align-center justify-start" on v-card do the same thing -->
@@ -30,7 +29,7 @@
                   :height="100"
                   :width="100"
                 />
-                <div class="username">
+                <div v-if="post && post.creator && $store.state.users[post.creator]" class="username">
                   {{ $store.state.users[post.creator].username }}
                 </div>
               </v-row>
@@ -80,7 +79,7 @@ export default {
             return this.pathPost === undefined
         },
         animationData() {
-            if (this.post) {
+            if (this.post && this.post.creator && this.$store.state.users[this.post.creator]) {
                 return this.$store.state.users[this.post.creator].lottie
             }
             return undefined
