@@ -55,7 +55,10 @@
 export default {
     computed: {
         username() {
-            return this.$store.state.username
+            if (this.$store.state.users[this.$store.state.authUserPath]) {
+                return this.$store.state.users[this.$store.state.authUserPath].username
+            }
+            return ''
         },
     },
     methods: {

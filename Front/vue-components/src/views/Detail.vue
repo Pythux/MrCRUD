@@ -29,6 +29,10 @@
                   :height="100"
                   :width="100"
                 />
+                <p v-else style="margin-left: 15px; margin-right: 5px; width: 100px;">
+                  No profile<br>
+                  animation
+                </p>
                 <div v-if="post && post.creator && $store.state.users[post.creator]" class="username">
                   {{ $store.state.users[post.creator].username }}
                 </div>
@@ -125,7 +129,7 @@ export default {
                     .then(response => {
                         this.edit = false
                         if (this.isCreation) {
-                            this.$router.push({ name: 'home' })
+                            this.$router.push({ name: 'detail', params: { idPost: response.data.id } })
                         }
                     })
                     .catch(error => {

@@ -44,7 +44,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     let isAuth = store.state.authToken
-    if ((!isAuth) && localStorage.getItem('usernameAndToken')) {
+    if ((!isAuth) && localStorage.getItem('userpathAndToken')) {
         store.dispatch('stored_login')
     }
     isAuth = store.state.authToken

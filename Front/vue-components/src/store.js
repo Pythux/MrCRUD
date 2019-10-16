@@ -7,13 +7,14 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         authToken: null,
-        username: null,
+        authUserPath: null,
         users: {},
+        ongoingRequest: [],
     },
     mutations: {
-        set_username_and_token(state, usernameAndToken) {
-            state.authToken = usernameAndToken.token
-            state.username = usernameAndToken.username
+        set_userpath_and_token(state, userpathAndToken) {
+            state.authToken = userpathAndToken.token
+            state.authUserPath = userpathAndToken.userPath
         },
         'add-user': (state, user) => {
             // state.users[user.url] = user
@@ -21,33 +22,34 @@ export default new Vuex.Store({
         },
     },
     actions: {
-        login({ commit }, usernameAndToken) {
-            localStorage.setItem('usernameAndToken', JSON.stringify(usernameAndToken))
-            commit('set_username_and_token', usernameAndToken)
+        login({ commit, dispatch }, userpathAndToken) {
+            localStorage.setItem('userpathAndToken', JSON.stringify(userpathAndToken))
+            commit('set_userpath_and_token', userpathAndToken)
+            dispatch('check-user', userpathAndToken.userPath)
         },
         logout({ commit }) {
-            localStorage.removeItem('usernameAndToken')
-            commit('set_username_and_token', { username: null, token: null })
+            localStorage.removeItem('userpathAndToken')
+            commit('set_userpath_and_token', { UserPath: null, token: null })
         },
         stored_login({ dispatch }) {
-            let usernameAndToken = JSON.parse(localStorage.getItem('usernameAndToken'))
-            if (usernameAndToken) {
-                dispatch('login', usernameAndToken)
+            let userpathAndToken = JSON.parse(localStorage.getItem('userpathAndToken'))
+            if (userpathAndToken) {
+                dispatch('login', userpathAndToken)
             }
         },
         'check-user': ({ commit, state }, userPath) => {
-            if (!state.users[userPath]) {
+            if (!state.users[userPath] && state.ongoingRequest.indexOf(userPath) === -1) {
+                state.ongoingRequest.push(userPath)
                 http.get(userPath).then(response => {
                     let user = response.data
                     user = http.toRelative(user, ['url', 'post_set'])
-                    if (!(user.url in state.users)) {
-                        // commit('add-user', user)
-                        http.get(`/user_lottie/${user.id}`)
-                            .then(response => { user.lottie = JSON.parse(response.data.lottie_json) })
-                            .finally(() => {
-                                commit('add-user', user)
-                            })
-                    }
+                    http.get(`/user_lottie/${user.id}`)
+                        .then(response => { user.lottie = JSON.parse(response.data.lottie_json) })
+                        .catch(() => {})
+                        .finally(() => {
+                            state.ongoingRequest.splice(state.ongoingRequest.indexOf(userPath), 1)
+                            commit('add-user', user)
+                        })
                 })
             }
         },

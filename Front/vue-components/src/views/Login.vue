@@ -104,7 +104,7 @@ export default {
             }
             const login = () => this.$http.get('/login', { auth: { username: this.login, password: this.password } })
                 .then(result => {
-                    this.$store.dispatch('login', { token: result.data.jwt, username: this.login })
+                    this.$store.dispatch('login', { token: result.data.jwt, userPath: `/user/${result.data.userId}` })
                     this.$router.push({ name: 'home' })
                 })
                 .catch(catcher)
