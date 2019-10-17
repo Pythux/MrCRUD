@@ -1,5 +1,6 @@
 from rest_framework import permissions
 from rest_framework.permissions import DjangoModelPermissions, DjangoObjectPermissions
+from django.conf import settings
 
 
 class OwnerModifyModelPermission(permissions.BasePermission):
@@ -11,7 +12,9 @@ class OwnerModifyModelPermission(permissions.BasePermission):
             return True
 
         if request.method in ('DELETE', 'PATCH', 'PUT'):
-            return obj == request.user
+            if obj.__class__.__name__ == 'MyUser':
+                return obj == request.user
+            return obj.user == request.user
         return False
 
 

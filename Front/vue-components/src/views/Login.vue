@@ -33,7 +33,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer />
-              <v-btn type="submit" :disabled="!valid" color="primary" style="text-transform: none">
+              <v-btn type="submit" :disabled="!valid" color="success" style="text-transform: none">
                 {{ actionTxt }}
               </v-btn>
             </v-card-actions>
