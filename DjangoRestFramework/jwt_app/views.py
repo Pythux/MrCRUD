@@ -45,4 +45,5 @@ class Auth(APIView):
         payload = {'id': user.id, 'iat': datetime.utcnow()}
         encoded = jwt.encode(payload, 'secret', algorithm='HS256').decode()
         encoded = encoded.split('.', 1)[1]  # no header
-        return {'jwt': encoded, 'userId': user.id}
+        return {'jwt': encoded}  # the user.id is in the token at field "id"
+        # return {'jwt': encoded, 'userId': user.id}
