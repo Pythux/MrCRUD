@@ -40,12 +40,13 @@ class JSONWebTokenAuthentication(BaseAuthentication):
             msg = _('Token invalid.')
             raise exceptions.AuthenticationFailed(msg)
 
-        expiration = timedelta(days=4, hours=2, seconds=10)
+        expiration = None
         # expiration = timedelta(seconds=40)
-        if datetime.fromtimestamp(payload['iat']) + expiration < datetime.utcnow():
-            # expiration on “iat” (Issued At) Claim
-            msg = _('Token has expired.')
-            raise exceptions.AuthenticationFailed(msg)
+        if expiration is not None:
+            if datetime.fromtimestamp(payload['iat']) + expiration < datetime.utcnow():
+                # expiration on “iat” (Issued At) Claim
+                msg = _('Token has expired.')
+                raise exceptions.AuthenticationFailed(msg)
         return payload
 
     def get_user(self, payload):

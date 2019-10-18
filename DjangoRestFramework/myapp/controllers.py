@@ -6,10 +6,12 @@ from rest_framework.reverse import reverse
 from django.contrib.contenttypes.models import ContentType
 from guardian.models import UserObjectPermission, GroupObjectPermission
 
-from django.contrib.auth.models import User, Group
-from .models import Post
-from .serializers import UserSerializer, PostSerializer
-from .permissions import UserModelPermission
+from django.contrib.auth.models import Group
+from .models import Post, MyUser, UserLottie
+from .validators import UserSerializer, PostSerializer, LottieSerializer
+from .permissions import PostNoAuthModelPermission, OwnerModifyModelPermission
+
+from .controllers_mixins import AllowMixin
 
 
 @api_view(['GET'])
@@ -21,18 +23,18 @@ def api_root(request, format=None):
     })
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserSet(AllowMixin, viewsets.ModelViewSet):
     """This viewset automatically provides `list` and `detail` actions."""
-    queryset = User.objects.all()
+    queryset = MyUser.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [UserModelPermission]
+    permission_classes = [PostNoAuthModelPermission, OwnerModifyModelPermission]
 
     def perform_create(self, serializer):
         user = serializer.save()
-        group_view = Group.objects.filter(name='viewers').get()
-        group_add = Group.objects.filter(name='posters').get()
-        group_edit = Group.objects.filter(name='editors').get()  # change and delete permission
-        user.groups.add(group_view, group_add, group_edit)
+        user.is_staff = True  # allow admin site
+        user.save()
+        user.groups.add(*[Group.objects.filter(name=name).get() for name in
+                        ['viewers', 'posters', 'editors']])
 
     def perform_update(self, serializer):
         """special treatement for password, on PUT/PATCH"""
@@ -43,7 +45,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.save()
 
 
-class PostViewSet(viewsets.ModelViewSet):
+class PostSet(AllowMixin, viewsets.ModelViewSet):
     """This viewset automatically provides `list` and `detail` actions."""
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -60,3 +62,10 @@ class PostViewSet(viewsets.ModelViewSet):
         GroupObjectPermission.objects.filter(
             object_pk=instance.pk, content_type=content_type).delete()
         instance.delete()
+
+
+class UserLottieSet(AllowMixin, viewsets.ModelViewSet):
+    """store lottie file for user profile"""
+    queryset = UserLottie.objects.all()
+    serializer_class = LottieSerializer
+    permission_classes = [permissions.IsAuthenticated, OwnerModifyModelPermission]

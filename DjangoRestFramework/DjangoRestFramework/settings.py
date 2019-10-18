@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from corsheaders.defaults import default_headers
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -62,6 +64,10 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:8080",
 ]
 
+CORS_EXPOSE_HEADERS = list(default_headers) + ['Allow']
+
+AUTH_USER_MODEL = 'myapp.MyUser'
+
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'guardian.backends.ObjectPermissionBackend'
@@ -69,6 +75,7 @@ AUTHENTICATION_BACKENDS = (
 GUARDIAN_RAISE_403 = True
 
 REST_FRAMEWORK = {
+    'DEFAULT_METADATA_CLASS': 'myapp.httpOption.AllowMetadata',
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,  # how many objects per page are returned
