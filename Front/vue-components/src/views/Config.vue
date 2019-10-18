@@ -5,8 +5,8 @@
         v-if="animationData"
         :key="animationChanged"
         :options="{animationData}"
-        :height="100"
-        :width="100"
+        :height="400"
+        :width="400"
       />
       <p v-else>
         You have no profile animation
@@ -25,8 +25,7 @@
     </v-row>
     <v-row justify="center">
       <v-form v-if="formProfile" v-model="valid" lazy-validation @submit.prevent="submit">
-        give a lottie JSON via url to the JSON or directly the JSON:
-        <v-text-field v-model="urlLottie" label="url to lottie json" />
+        give a lottie JSON:
         <v-textarea v-model="rawLottie" label="lottie json" :rules="JsonRules" />
         <v-row justify="space-around">
           <v-btn type="sumbit" :disabled="!valid" color="success" style="text-transform: none">
@@ -46,7 +45,6 @@ export default {
     data() {
         return {
             formProfile: false,
-            urlLottie: undefined,
             rawLottie: undefined,
             valid: true,
             JsonRules: [v => {
@@ -84,11 +82,8 @@ export default {
     },
     methods: {
         submit() {
-            if (!this.urlLottie && !this.rawLottie) {
+            if (!this.rawLottie) {
                 this.formProfile = false
-            }
-            if (this.urlLottie) {
-
             } else {
                 const changeUserLottie = response => {
                     this.rawLottie = ''

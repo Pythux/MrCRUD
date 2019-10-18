@@ -13,7 +13,7 @@ class Post(models.Model):
 
 
 class UserLottie(models.Model):
-    """https://lottiefiles.com/: used for user profile animation"""
+    """https://lottiefiles.com/ : used for user profile animation"""
     user = models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True, on_delete=models.CASCADE)
     lottie_json = models.TextField()
 
