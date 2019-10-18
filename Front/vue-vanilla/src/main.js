@@ -6,7 +6,7 @@ import store from './store'
 
 Vue.config.productionTip = false
 
-const token = 'eyJpZCI6OCwiaWF0IjoxNTY5NTYwMTI3fQ.0FEhoqKbSKlXF_778uGKNK-SJ7VYSOjh4lAwJ0IZNWE'
+const token = 'eyJpZCI6MiwiaWF0IjoxNTcxMzk2NTY0fQ.ICy2CdR8kisgq3fXdOaXY8RfEG7TqZLCl5OSwvHji28'
 Vue.prototype.$http = Axios.create(
     {
         baseURL: 'http://localhost:8000/api',
