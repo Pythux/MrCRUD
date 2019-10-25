@@ -5,12 +5,12 @@ import http from './axios-auth'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-    state: {
+    state: () => ({
         authToken: null,
         authUserPath: null,
         users: {},
         ongoingRequest: [],
-    },
+    }),
     mutations: {
         set_userpath_and_token(state, userpathAndToken) {
             state.authToken = userpathAndToken.token
